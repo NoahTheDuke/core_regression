@@ -324,7 +324,7 @@
     :test-cmd "test"
     :git/url "https://github.com/clj-commons/tentacles.git"
     :git/tag "0.6.9"}
-])
+   ])
 
 (def popular-libraries
   [
@@ -353,7 +353,6 @@
     :test-cmd "midje"
     :git/url "https://github.com/marick/Midje.git"
     :git/sha "34819ae8d24a11b0f953d461f94e09a2638ff385"}
-
    {:name 'metosin/reitit
     :definition :lein
     :test-cmd "bat-test"
@@ -424,7 +423,6 @@
     :test-cmd "test"
     :git/url "https://github.com/metosin/potpuri.git"
     :git/tag "0.5.3"}
-
    {:name 'nextjournal/clerk
     :definition :deps.edn
     :test-cmd "-X:test"
@@ -528,7 +526,6 @@
     :test-cmd "-X:dev:test"
     :git/url "https://github.com/walmartlabs/lacinia.git"
     :git/tag "v1.2.1"}
-
    {:name 'weavejester/compojure
     :definition :lein
     :test-cmd "test"
@@ -539,7 +536,6 @@
     :test-cmd "test"
     :git/url "https://github.com/weavejester/hiccup.git"
     :git/tag "2.0.0-RC1"}
-
    {:name 'weavejester/ragtime
     :definition :lein
     :test-cmd "sub test"
@@ -615,7 +611,6 @@
     :test-cmd "test"
     :git/url "https://github.com/weavejester/crypto-equality.git"
     :git/tag "1.0.1"}
-
    {:name 'juxt/bidi
     :definition :lein
     :test-cmd "test"
@@ -676,7 +671,6 @@
     :test-cmd "-M:dev:test"
     :git/url "https://github.com/juxt/reap.git"
     :git/sha "29ffc8664df26041ebd93a53f009d2606d1a5b6c"}
-
    ])
 
 (defn all-libraries []

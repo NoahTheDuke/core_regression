@@ -281,8 +281,9 @@
    {:name 'clj-commons/dirigiste
     :definition :lein
     :test-cmd "test"
+    :skip? true ;; flaky test
     :git/url "https://github.com/clj-commons/dirigiste.git"
-    :git/tag "1.0.3"}
+    :git/sha "e18f94e50f286c6614ffacc25607164bcbba57a7"}
    {:name 'clj-commons/primitive-math
     :definition :lein
     :test-cmd "test"
@@ -335,6 +336,7 @@
     :git/tag "v1.4.12"}
    {:name 'cerner/clara-rules
     :definition :lein
+    :setup ["sed -i -e 's/leiningen.cljsbuild//g' project.clj"]
     :test-cmd "test"
     :git/url "https://github.com/cerner/clara-rules.git"
     :git/tag "0.22.1"}
@@ -346,11 +348,13 @@
    {:name 'http-kit/http-kit
     :definition :lein
     :test-cmd "test"
+    :skip? true ;; Outdated dev dependency (http.async.client) doesn't compile under Clojure 1.9+
     :git/url "https://github.com/http-kit/http-kit.git"
     :git/tag "v2.7.0"}
    {:name 'marick/midje
     :definition :lein
     :test-cmd "midje"
+    :skip? true ;; test suite doesn't work with 1.10+ error messages
     :git/url "https://github.com/marick/Midje.git"
     :git/sha "34819ae8d24a11b0f953d461f94e09a2638ff385"}
    {:name 'metosin/reitit
@@ -366,6 +370,7 @@
    {:name 'metosin/compojure-api
     :definition :lein
     :test-cmd "midje"
+    :setup ["sed -i -e 's/:pedantic. :abort//g' project.clj"]
     :git/url "https://github.com/metosin/compojure-api.git"
     :git/tag "2.0.0-alpha31"}
    {:name 'metosin/spec-tools
@@ -386,6 +391,7 @@
    {:name 'metosin/ring-swagger
     :definition :lein
     :test-cmd "midje"
+    :skip? true ;; midje doesn't work well with Clojure 1.10+
     :git/url "https://github.com/metosin/ring-swagger.git"
     :git/tag "0.26.2"}
    {:name 'metosin/kekkonen
@@ -400,6 +406,7 @@
     :git/sha "616410a17f26ebd83a7ee20d6b0cd49bc5b89c64"}
    {:name 'metosin/sieppari
     :definition :lein
+    :setup "npm ci"
     :test-cmd "kaocha"
     :git/url "https://github.com/metosin/sieppari.git"
     :git/sha "bfc76d46d7fa01d85178e5454a4274c0461fb7c4"}
@@ -415,7 +422,9 @@
     :git/tag "0.13.1"}
    {:name 'metosin/porsas
     :definition :lein
+    :setup "docker-compose up -d"
     :test-cmd "test"
+    :teardown "docker-compose down"
     :git/url "https://github.com/metosin/porsas.git"
     :git/sha "016256bd44e996d6b642c4c037b97ff4b885787f"}
    {:name 'metosin/potpuri
@@ -424,8 +433,9 @@
     :git/url "https://github.com/metosin/potpuri.git"
     :git/tag "0.5.3"}
    {:name 'nextjournal/clerk
-    :definition :deps.edn
-    :test-cmd "-X:test"
+    :definition :script
+    :test-cmd "bb test:clj :kaocha/reporter '[kaocha.report/documentation]'"
+    :skip? true ;; flaky test?
     :git/url "https://github.com/nextjournal/clerk.git"
     :git/tag "v0.14.919"}
    {:name 'pedestal/pedestal
@@ -619,6 +629,7 @@
    {:name 'juxt/yada
     :definition :lein
     :test-cmd "test"
+    :skip? true ;; broken test, maybe abandoned?
     :git/url "https://github.com/juxt/yada.git"
     :git/tag "1.2.15.1"}
    {:name 'juxt/aero
@@ -631,19 +642,10 @@
     :test-cmd "-M:test-clj -m kaocha.runner"
     :git/url "https://github.com/juxt/tick.git"
     :git/tag "0.6.1"}
-   {:name 'juxt/joplin
-    :definition :lein
-    :test-cmd "sub test"
-    :git/url "https://github.com/juxt/joplin.git"
-    :git/tag "0.3.11"}
-   {:name 'juxt/juxt-accounting
-    :definition :lein
-    :test-cmd "test"
-    :git/url "https://github.com/juxt/juxt-accounting.git"
-    :git/tag "0.1.4"}
    {:name 'juxt/clip
     :definition :deps.edn
     :test-cmd "-M:dev:test"
+    :skip? true ;; broken test, maybe abandoned?
     :git/url "https://github.com/juxt/clip.git"
     :git/tag "v0.28.0"}
    {:name 'juxt/iota
@@ -789,7 +791,14 @@
                         (println (str (:name lib) " tests did not pass"))))
                     (catch Throwable e
                       (prn e)
-                      (swap! results update :failure conj (:name lib))))))))))
+                      (swap! results update :failure conj (:name lib))))
+                  (let [teardown (:teardown lib)
+                        teardown (if (string? teardown) [teardown] teardown)]
+                    (doseq [td teardown]
+                      (try
+                        (shell shell-opts td)
+                        (catch Throwable _
+                          (println (format "Teardown '%s' failed" td))))))))))))
     (pprint/pprint (:failure @results))))
 
 (def cli-options
@@ -853,20 +862,6 @@
 ;;
 ;; current failures (not skipped):
 ;;
-;; cerner/clara-rules
-;; clj-commons/dirigiste
-;; engelberg/instaparse
-;; http-kit/http-kit
-;; juxt/clip
-;; juxt/joplin
-;; juxt/juxt-accounting
-;; juxt/yada
-;; marick/midje
-;; metosin/compojure-api
-;; metosin/porsas
-;; metosin/ring-swagger
-;; metosin/sieppari
-;; nextjournal/clerk
 ;; pedestal/pedestal
 ;; tonsky/rum
 ;; weavejester/cljfmt

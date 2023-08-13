@@ -695,7 +695,7 @@
           (:test-cmd lib)))
 
 (defmethod test-cmd :lein [lib]
-  (str "lein with-profile +latest " (:test-cmd lib)))
+  (str "lein with-profile +latest do clean, " (:test-cmd lib)))
 
 (defmethod test-cmd :script [lib]
   (:test-cmd lib))
@@ -847,3 +847,29 @@
 
 (comment
   (-main "--no-build" "--library" "clj-commons/seesaw"))
+
+;; all-libraries: 36 min
+;; core libraries: 13 min
+;;
+;; current failures (not skipped):
+;;
+;; cerner/clara-rules
+;; clj-commons/dirigiste
+;; engelberg/instaparse
+;; http-kit/http-kit
+;; juxt/clip
+;; juxt/joplin
+;; juxt/juxt-accounting
+;; juxt/yada
+;; marick/midje
+;; metosin/compojure-api
+;; metosin/porsas
+;; metosin/ring-swagger
+;; metosin/sieppari
+;; nextjournal/clerk
+;; pedestal/pedestal
+;; tonsky/rum
+;; weavejester/cljfmt
+;; weavejester/eftest
+;; weavejester/environ
+;; weavejester/hashp

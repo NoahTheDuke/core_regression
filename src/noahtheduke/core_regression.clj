@@ -219,7 +219,7 @@
    {:name 'clj-commons/cljss
     :definition :lein
     :test-cmd "test"
-    :skip? true
+    :skip true
     :git/url "https://github.com/clj-commons/cljss.git"
     :git/tag "v1.6.3"}
    {:name 'clj-commons/digest
@@ -230,7 +230,7 @@
    {:name 'clj-commons/dirigiste
     :definition :lein
     :test-cmd "test"
-    :skip? true
+    :skip true
     :git/url "https://github.com/clj-commons/dirigiste.git"
     :git/sha "e18f94e50f286c6614ffacc25607164bcbba57a7"}
    {:name 'clj-commons/durable-queue
@@ -241,7 +241,7 @@
    {:name 'clj-commons/etaoin
     :definition :script
     :test-cmd "bb test:jvm --suites unit --launch-virtual-display"
-    :skip? true
+    :skip true ;; frontend/cljs app
     :git/url "https://github.com/clj-commons/etaoin.git"
     :git/tag "v1.0.40"}
    {:name 'clj-commons/gloss
@@ -280,8 +280,8 @@
     :git/url "https://github.com/clj-commons/ordered.git"
     :git/tag "Release-1.15.11"}
    {:name 'clj-commons/pomegranate
-    :definition :script
-    :test-cmd "bb test"
+    :definition :deps.edn
+    :test-cmd "-M:test"
     :git/url "https://github.com/clj-commons/pomegranate.git"
     :git/tag "v1.2.23"}
    {:name 'clj-commons/potemkin
@@ -310,8 +310,10 @@
     :git/url "https://github.com/clj-commons/ring-buffer.git"
     :git/tag "1.3.1"}
    {:name 'clj-commons/seesaw
-    :definition :script
-    :test-cmd "./lazytest.sh"
+    :definition :lein
+    :setup "lein javac"
+    :test-cmd "run -m lazytest.main test"
+    :skip true ;; ns-form spec fails lol
     :git/url "https://github.com/clj-commons/seesaw.git"
     :git/sha "38695ea1a590d84d877a50df8792f58e04fcbd02"}
    {:name 'clj-commons/tentacles
@@ -322,7 +324,7 @@
    {:name 'clj-commons/useful
     :definition :lein
     :test-cmd "test"
-    :skip? true
+    :skip true
     :git/url "https://github.com/clj-commons/useful.git"
     :git/tag "0.11.6"}
   ])
@@ -339,6 +341,7 @@
    {:name 'brandonbloom/backtick
     :definition :lein
     :test-cmd "test"
+    :skip true ;; relies on pre-1.10 buggy behavior
     :git/url "https://github.com/brandonbloom/backtick.git"
     :git/sha "9bea36d77c1815c21d86de290a199a975416b36f"}
    {:name 'brandonbloom/fipp
@@ -369,13 +372,15 @@
     :git/tag "0.1.1"}
    {:name 'clojurewerkz/archimedes
     :definition :lein
-    :setup "lein with-profile dev javac"
+    :setup "lein with-profile +dev javac"
     :test-cmd "test"
     :git/url "https://github.com/clojurewerkz/archimedes.git"
-    :git/sha "33d28084829f6ccb6aed870a357fa6b53c57d2cc"}
+    :git/sha "f3300d3d71d35534acf7cc6f010e3fa503be0fba"}
    {:name 'clojurewerkz/balagan
     :definition :lein
+    :setup "lein do clean, cljx once"
     :test-cmd "test"
+    :skip true ;; cljx doesn't work with recent clojure versions
     :git/url "https://github.com/clojurewerkz/balagan.git"
     :git/sha "22ac86d676ed2b85aac723c0fa262fb0c5ec5ec7"}
    {:name 'clojurewerkz/buffy
@@ -383,18 +388,40 @@
     :test-cmd "test"
     :git/url "https://github.com/clojurewerkz/buffy.git"
     :git/sha "459a4ba194c66d8426cdbdf4cea6e4ccd6239428"}
+   {:name 'clojurewerkz/cassaforte
+    :definition :lein
+    :test-cmd "test"
+    :skip true ;; requires cassandra
+    :git/url "https://github.com/clojurewerkz/cassaforte.git"
+    :git/sha "bd0b3ff44c5d7f993798270032aa41be0e8209c2"}
    {:name 'clojurewerkz/chash
     :definition :lein
     :test-cmd "test"
-    :git/url "https://github.com/clojurewerkz/chash.git"
+    :git/url "https://github.com/michaelklishin/chash.git"
     :git/sha "0ba3abb76d1f6cb62e000a0dacd8f72705db70b2"}
+   {:name 'clojurewerkz/elastisch
+    :definition :lein
+    :test-cmd "test"
+    :skip true ;; requires elasticsearch
+    :git/url "https://github.com/clojurewerkz/elastisch.git"
+    :git/sha "61f882d673bce7a73cb1ce864796ae3826f9747e"}
+   {:name 'clojurewerkz/langohr
+    :definition :lein
+    :test-cmd "test"
+    :skip true ;; requires rabbitmq
+    :git/url "https://github.com/clojurewerkz/langohr.git"
+    :git/sha "a04f076ce254ca5a94f918891e3eb2aa5ce06b94"}
    {:name 'clojurewerkz/mailer
     :definition :lein
     :test-cmd "test"
+    :skip true ;; outdated dependencies rely on removed java package
     :git/url "https://github.com/clojurewerkz/mailer.git"
     :git/sha "89049ccdc955730b0093068b7c41da18abcde468"}
    {:name 'clojurewerkz/meltdown
     :definition :lein
+    :setup ["sed -i -e 's/1.1.6.BUILD-SNAPSHOT/1.1.6.RELEASE/g' project.clj"
+            "sed -i -e 's/:javac-options.*//g' project.clj"
+            "sed -i -e 's/\"-XX:+UseFastAccessorMethods\"//g' project.clj"]
     :test-cmd "test"
     :git/url "https://github.com/clojurewerkz/meltdown.git"
     :git/sha "58d50141bb35b4a5abf59dcb13db9f577b6b3b9f"}
@@ -403,6 +430,18 @@
     :test-cmd "test"
     :git/url "https://github.com/clojurewerkz/money.git"
     :git/sha "15a154033e57c68de1de16bdbde578ee20839065"}
+   {:name 'clojurewerkz/monger
+    :definition :lein
+    :test-cmd "test"
+    :skip true ;; requires mongodb
+    :git/url "https://github.com/clojurewerkz/monger.git"
+    :git/sha "84170f7c51973e3d789736cdeb3cd8ad013071c3"}
+   {:name 'clojurewerkz/neocons
+    :definition :lein
+    :test-cmd "test"
+    :skip true ;; requires neo4j
+    :git/url "https://github.com/clojurewerkz/neocons.git"
+    :git/sha "30f30e95686a01f7a34082600bc1221877c2acbd"}
    {:name 'clojurewerkz/ogre
     :definition :lein
     :setup "lein with-profile dev javac"
@@ -417,12 +456,12 @@
    {:name 'clojurewerkz/propertied
     :definition :lein
     :test-cmd "test"
-    :git/url "https://github.com/clojurewerkz/propertied.git"
+    :git/url "https://github.com/michaelklishin/propertied.git"
     :git/sha "5fb3b81818a4071a9d041060aa87c0dee34eb551"}
    {:name 'clojurewerkz/quartzite
     :definition :lein
     :test-cmd "test"
-    :git/url "https://github.com/clojurewerkz/quartzite.git"
+    :git/url "https://github.com/michaelklishin/quartzite.git"
     :git/sha "21a69c6339491c3a015c17db4b2d0a1649029c44"}
    {:name 'clojurewerkz/route-one
     :definition :lein
@@ -449,6 +488,19 @@
     :test-cmd "test"
     :git/url "https://github.com/michaelklishin/validateur.git"
     :git/tag "v2.6.0"}
+   {:name 'clojurewerkz/welle
+    :definition :lein
+    :test-cmd "test"
+    :skip true ;; requires riak
+    :git/url "https://github.com/clojurewerkz/welle.git"
+    :git/sha "3f3cd24af7c0d95489298e4096b362b6943f85ef"}
+   {:name 'cnuerber/dtype-next
+    :definition :deps.edn
+    :setup ["rm -rf target/classes"
+            {:deps.edn "-T:build compile"}]
+    :test-cmd "-M:dev-mac-m1:test" ;; personal machine specific...
+    :git/url "https://github.com/cnuernber/dtype-next.git"
+    :git/sha "bc08804e07a084cbd21056892d20e9b7c85ab937"}
    {:name 'dakrone/cheshire
     :definition :lein
     :test-cmd "all test :all"
@@ -487,7 +539,7 @@
    {:name 'http-kit/http-kit
     :definition :lein
     :test-cmd "test"
-    :skip? true
+    :skip true
     :git/url "https://github.com/http-kit/http-kit.git"
     :git/tag "v2.7.0"}
    {:name 'ibdknox/colorize
@@ -495,6 +547,17 @@
     :test-cmd "test"
     :git/url "https://github.com/ibdknox/colorize.git"
     :git/sha "d89a13db5cc3e2c59cf397fab266f886f5ee9f7c"}
+   {:name 'igjoshua/americano
+    :definition :deps.edn
+    :test-cmd "-M:test:runner"
+    :git/url "https://github.com/IGJoshua/americano.git"
+    :git/tag "v1.2.0"}
+   {:name 'igjoshua/farolero
+    :definition :deps.edn
+    :setup {:deps.edn "-X:deps prep"}
+    :test-cmd "-M:dev:test:runner"
+    :git/url "https://github.com/IGJoshua/farolero.git"
+    :git/tag "v1.5.0"}
    {:name 'juxt/aero
     :definition :lein
     :test-cmd "test"
@@ -508,7 +571,7 @@
    {:name 'juxt/clip
     :definition :deps.edn
     :test-cmd "-M:dev:test"
-    :skip? true
+    :skip true
     :git/url "https://github.com/juxt/clip.git"
     :git/tag "v0.28.0"}
    {:name 'juxt/dirwatch
@@ -544,7 +607,7 @@
    {:name 'juxt/yada
     :definition :lein
     :test-cmd "test"
-    :skip? true
+    :skip true
     :git/url "https://github.com/juxt/yada.git"
     :git/tag "1.2.15.1"}
    {:name 'liquidz/antq
@@ -570,7 +633,7 @@
    {:name 'marick/midje
     :definition :lein
     :test-cmd "midje"
-    :skip? true
+    :skip true
     :git/url "https://github.com/marick/Midje.git"
     :git/sha "34819ae8d24a11b0f953d461f94e09a2638ff385"}
    {:name 'metosin/compojure-api
@@ -623,7 +686,7 @@
    {:name 'metosin/ring-swagger
     :definition :lein
     :test-cmd "midje"
-    :skip? true
+    :skip true
     :git/url "https://github.com/metosin/ring-swagger.git"
     :git/tag "0.26.2"}
    {:name 'metosin/schema-tools
@@ -652,10 +715,16 @@
     :test-cmd "test"
     :git/url "https://github.com/mmcgrana/clj-stacktrace.git"
     :git/tag "0.2.8"}
+   {:name 'mtgred/netrunner
+    :definition :lein
+    :setup "[ ! -f data/cards.edn ] && lein fetch --no-db --no-card-images"
+    :test-cmd "eftest"
+    :git/url "https://github.com/mtgred/netrunner.git"
+    :git/sha "dffc1fabd2d5ba8c2cf44a8d6b30d14a3c2daef0"}
    {:name 'nextjournal/clerk
-    :definition :script
-    :test-cmd "bb test:clj :kaocha/reporter '[kaocha.report/documentation]'"
-    :skip? true ;; complex set up, complex app, idk how to run this
+    :definition :deps.edn
+    :test-cmd "-X:test"
+    :skip true ;; flaky test?
     :git/url "https://github.com/nextjournal/clerk.git"
     :git/tag "v0.14.919"}
    {:name 'ninjudd/clojure-complete
@@ -670,11 +739,14 @@
     :git/sha "514c1f5b3169cbb88b0eba5dd8c85ac049055ab8"}
    {:name 'pedestal/pedestal
     :definition :deps.edn
-    :setup ["clojure -X:deps:local prep"
-            "clojure -T:build compile-java :aliases '[:local :servlet-api]'"]
+    :setup [{:deps.edn "-X:deps:local prep"
+             :dir "service"}
+            {:deps.edn "-T:build compile-java :aliases '[:local :servlet-api]'"
+             :dir "service"}]
     :test-cmd "-X:test"
+    :test-dir "tests"
     :git/url "https://github.com/pedestal/pedestal.git"
-    :git/tag "0.6.0"}
+    :git/sha "9b02e4c4a9b87c718ed7f3f7bcdab032e84336a7"}
    {:name 'plumatic/schema
     :definition :lein
     :test-cmd "test"
@@ -701,8 +773,8 @@
     :git/url "https://github.com/redplanetlabs/proxy-plus.git"
     :git/sha "839106fb9b98a3916f551a53f24b36ab4e6c5916"}
    {:name 'redplanetlabs/specter
-    :definition :script
-    :test-cmd "bb test:clj"
+    :definition :lein
+    :test-cmd "test"
     :git/url "https://github.com/redplanetlabs/specter.git"
     :git/tag "1.1.4"}
    {:name 'redplanetlabs/vector-backed-sorted-map
@@ -738,7 +810,7 @@
    {:name 'taoensso/carmine
     :definition :lein
     :test-cmd "test"
-    :skip? true
+    :skip true
     :git/url "https://github.com/taoensso/carmine.git"
     :git/tag "v3.2.0"}
    {:name 'taoensso/encore
@@ -791,17 +863,26 @@
     :test-cmd "test"
     :git/url "https://github.com/taoensso/tufte.git"
     :git/tag "v2.5.1"}
-   {:name 'tonsky/datascript
-    :definition :script
-    :test-cmd "./script/test_clj.sh"
-    :git/url "https://github.com/tonsky/datascript.git"
-    :git/tag "1.5.2"}
-   {:name 'tonsky/rum
+   {:name 'tonsky/compact-uuids
     :definition :lein
     :test-cmd "test"
-    :skip? true
-    :git/url "https://github.com/tonsky/rum.git"
-    :git/tag "0.12.11"}
+    :git/url "https://github.com/tonsky/compact-uuids.git"
+    :git/tag "0.2.1"}
+   {:name 'tonsky/datascript
+    :definition :lein
+    :test-cmd "with-profile test run -m datascript.test/test-clj"
+    :git/url "https://github.com/tonsky/datascript.git"
+    :git/tag "1.5.2"}
+   {:name 'tonsky/tongue
+    :definition :lein
+    :test-cmd "test-clj"
+    :git/url "https://github.com/tonsky/tongue.git"
+    :git/tag "0.4.4"}
+   {:name 'tonsky/uberdeps
+    :definition :deps.edn
+    :test-cmd "-M:test -m uberdeps.test"
+    :git/url "https://github.com/tonsky/uberdeps.git"
+    :git/tag "1.3.0"}
    {:name 'walmartlabs/lacinia
     :definition :deps.edn
     :test-cmd "-X:dev:test"
@@ -813,8 +894,9 @@
     :git/url "https://github.com/weavejester/ataraxy.git"
     :git/tag "0.4.3"}
    {:name 'weavejester/cljfmt
-    :definition :script
-    :test-cmd "cd cljfmt && lein test"
+    :definition :lein
+    :test-cmd "test"
+    :test-dir "cljfmt"
     :git/url "https://github.com/weavejester/cljfmt.git"
     :git/tag "0.11.2"}
    {:name 'weavejester/clout
@@ -848,13 +930,15 @@
     :git/url "https://github.com/weavejester/eclair.git"
     :git/sha "51f7a298081ab0525d3a6d8999fbba91ebb11c55"}
    {:name 'weavejester/eftest
-    :definition :script
-    :test-cmd "cd eftest && lein test"
+    :definition :lein
+    :test-cmd "test"
+    :test-dir "eftest"
     :git/url "https://github.com/weavejester/eftest.git"
     :git/tag "0.6.0"}
    {:name 'weavejester/environ
-    :definition :script
-    :test-cmd "cd environ && lein test"
+    :definition :lein
+    :test-cmd "test"
+    :test-dir "environ"
     :git/url "https://github.com/weavejester/environ.git"
     :git/tag "1.2.0"}
    {:name 'weavejester/euclidean
@@ -865,7 +949,7 @@
    {:name 'weavejester/hashp
     :definition :lein
     :test-cmd "test"
-    :skip? true ;; no tests
+    :skip true ;; no tests
     :git/url "https://github.com/weavejester/hashp.git"
     :git/tag "0.2.2"}
    {:name 'weavejester/haslett
@@ -934,18 +1018,20 @@
     :git/url "https://github.com/yogthos/markdown-clj.git"
     :git/sha "288a19b983b06fa1b12a99f0773956e420f998e4"}
    {:name 'yogthos/migratus
-    :definition :script
-    :test-cmd "bin/kaocha"
+    :definition :deps.edn
+    :test-cmd "-J-Dclojure.main.report=stderr -Sforce -M:test-runner:dev"
     :git/url "https://github.com/yogthos/migratus.git"
     :git/sha "b61f9bcbce7acd2156a0adffbd9946f9702a4acd"}
+   ;; any later commit requires java 19+. should I disable this?
    {:name 'yogthos/selmer
     :definition :deps.edn
-    :test-cmd "-M:dev:test"
+    :test-cmd "-X:dev:test"
     :git/url "https://github.com/yogthos/Selmer.git"
-    :git/sha "d1a40e5114427d3176fb5269425780abcf461924"}
+    :git/sha "151b81a0c904b07444f37382132bd9e39add01f2"}
    {:name 'ztellman/clj-tuple
     :definition :lein
     :test-cmd "test"
+    :skip true ;; test.check fails, hashes are not equal
     :git/url "https://github.com/ztellman/clj-tuple.git"
     :git/tag "0.2.2"}
   ])
@@ -967,12 +1053,14 @@
           (:version lib)))
 
 (defmethod test-cmd :deps.edn [lib]
-  (format "clojure -Sdeps '{:deps {org.clojure/clojure {:mvn/version \"%s\"}}}' %s"
+  (format "clojure -Srepro -Sdeps '{:deps {org.clojure/clojure {:mvn/version \"%s\"}}}' %s"
           (:version lib)
           (:test-cmd lib)))
 
 (defmethod test-cmd :lein [lib]
-  (str "lein with-profile +latest do clean, " (:test-cmd lib)))
+  (if (str/starts-with? (:test-cmd lib) "lein")
+    (:test-cmd lib)
+    (str "lein with-profile +latest " (:test-cmd lib))))
 
 (defmethod test-cmd :script [lib]
   (:test-cmd lib))
@@ -1013,14 +1101,14 @@
   (-> (io/file dir "project.clj")
       (slurp)
       (str/replace ":pedantic? :abort" "")
-      (#(spit (io/file dir "project.clj") %))))
-
-;; clojure core libraries only: 13 min
+      (str/replace "http://" "https://")
+      (->> (spit (io/file dir "project.clj")))))
 
 (defn lib-dir [lib]
-  (gl/procure (:git/url lib)
-              (:name lib)
-              (or (:git/tag lib) (:git/sha lib))))
+  (binding [*out* (java.io.StringWriter.)]
+    (gl/procure (:git/url lib)
+                (:name lib)
+                (or (:git/tag lib) (:git/sha lib)))))
 
 (defn run-impl [{:keys [options]}]
   (println (.toString (java.time.LocalDateTime/now)))
@@ -1044,7 +1132,7 @@
       (doseq [lib (all-libraries)
               :when (filter-fn lib)]
         (newline)
-        (if (:skip? lib)
+        (if (:skip lib)
           (println "Skipping" (:name lib))
           (do (println "Testing" (:name lib))
               (when-let [dir (lib-dir lib)]
@@ -1054,19 +1142,40 @@
                 (let [lib (assoc lib :version version)
                       shell-opts (merge {:dir dir :continue true}
                                         (when-not (:test-out options)
-                                          {:out :string}))
+                                          {:out :string
+                                           :err :string}))
                       setup (:setup lib)
-                      setup (if (string? setup) [setup] setup)
+                      setup (cond (vector? setup) setup
+                                  (string? setup) [setup])
                       cmd (test-cmd lib)]
-                  (doseq [setup setup]
-                    (println "Running setup command:" setup)
-                    (try
-                      (shell shell-opts setup)
-                      (catch Throwable _
-                        (println "Setup command failed"))))
+                  (doseq [setup-cmd setup
+                          :let [cmd
+                                (cond
+                                  (string? setup-cmd) setup-cmd
+                                  (and (map? setup-cmd) (:deps.edn setup-cmd))
+                                  (test-cmd {:version version
+                                             :definition :deps.edn
+                                             :test-cmd (:deps.edn setup-cmd)})
+                                  :else nil)]]
+                    (if cmd
+                      (try
+                        (println "Running setup command:" cmd)
+                        (let [shell-opts
+                              (if (and (map? setup-cmd)
+                                       (:dir setup-cmd))
+                                (update shell-opts :dir io/file (:dir setup-cmd))
+                                shell-opts)]
+                          (shell shell-opts cmd))
+                        (catch Throwable _
+                          (println "Setup command failed")))
+                      (println "Setup command nil: " setup)))
                   (try
                     (println "Running test command:" cmd)
-                    (let [test-result (shell shell-opts cmd)
+                    (let [shell-opts
+                          (if (:test-dir lib)
+                            (update shell-opts :dir io/file (:test-dir lib))
+                            shell-opts)
+                          test-result (shell shell-opts cmd)
                           k (if (zero? (:exit test-result)) :success :failure)]
                       (swap! results update k conj (:name lib))
                       (when (= k :failure)
@@ -1139,16 +1248,31 @@
 (comment
   (-main "--no-build" "--library" "clj-commons/seesaw"))
 
-;; all-libraries: 36 min
-;; core libraries: 13 min
-;;
+;; Full run: 40 min
+
 ;; current failures (not skipped):
 ;;
-;; pedestal/pedestal
-;; tonsky/rum
-;; weavejester/cljfmt
-;; weavejester/eftest
-;; weavejester/environ
+;; clj-commons/aleph
+;; brandonbloom/backtick
+;; borkdude/dynaload
+;; clojurewerkz/balagan
+;; clojurewerkz/chash
+;; clojurewerkz/mailer
+;; clojurewerkz/meltdown
+;; clojurewerkz/propertied
+;; clojurewerkz/quartzite
+;; clojurewerkz/route-one
+;; clojurewerkz/scrypt
+;; clojurewerkz/serialism
+;; clojurewerkz/support
+;; clojurewerkz/validateur
+;; ibdknox/colorize
+;; juxt/dirwatch
+;; liquidz/build.edn
+;; ninjudd/clojure-complete
+;; raynes/fs
+;; wkf/hawk
+;; yogthos/json-html
 
 ;; libraries to add:
 ;;

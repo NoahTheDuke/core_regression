@@ -329,8 +329,6 @@
     :git/tag "0.11.6"}
   ])
 
-
-
 (def popular-libraries
   [
    {:name 'aphyr/dom-top
@@ -1031,7 +1029,8 @@
    {:name 'ztellman/clj-tuple
     :definition :lein
     :test-cmd "test"
-    :skip true ;; test.check fails, hashes are not equal
+    :setup "sed -i -e 's/:javac-options.*//g' project.clj"
+    ; :skip true ;; collection-test is not a valid library anymore
     :git/url "https://github.com/ztellman/clj-tuple.git"
     :git/tag "0.2.2"}
   ])
@@ -1135,67 +1134,68 @@
         (if (:skip lib)
           (println "Skipping" (:name lib))
           (do (println "Testing" (:name lib))
-              (when-let [dir (lib-dir lib)]
-                (when (= :lein (:definition lib))
-                  (copy-profiles dir profile)
-                  (remove-pedantic dir))
-                (let [lib (assoc lib :version version)
-                      shell-opts (merge {:dir dir :continue true}
-                                        (when-not (:test-out options)
-                                          {:out :string
-                                           :err :string}))
-                      setup (:setup lib)
-                      setup (cond (vector? setup) setup
-                                  (string? setup) [setup])
-                      cmd (test-cmd lib)]
-                  (doseq [setup-cmd setup
-                          :let [cmd
-                                (cond
-                                  (string? setup-cmd) setup-cmd
-                                  (and (map? setup-cmd) (:deps.edn setup-cmd))
-                                  (test-cmd {:version version
-                                             :definition :deps.edn
-                                             :test-cmd (:deps.edn setup-cmd)})
-                                  :else nil)]]
-                    (if cmd
-                      (try
-                        (println "Running setup command:" cmd)
-                        (let [shell-opts
-                              (if (and (map? setup-cmd)
-                                       (:dir setup-cmd))
-                                (update shell-opts :dir io/file (:dir setup-cmd))
-                                shell-opts)]
-                          (shell shell-opts cmd))
-                        (catch Throwable _
-                          (println "Setup command failed")))
-                      (println "Setup command nil: " setup)))
-                  (try
-                    (println "Running test command:" cmd)
-                    (let [shell-opts
+              (let [dir (lib-dir lib) 
+                    dir (when dir
                           (if (:test-dir lib)
-                            (update shell-opts :dir io/file (:test-dir lib))
-                            shell-opts)
-                          test-result (shell shell-opts cmd)
-                          k (if (zero? (:exit test-result)) :success :failure)]
-                      (swap! results update k conj (:name lib))
-                      (when (= k :failure)
-                        (println (str (:name lib) " tests did not pass"))))
-                    (catch Throwable e
-                      (prn e)
-                      (swap! results update :failure conj (:name lib))))
-                  (let [teardown (:teardown lib)
-                        teardown (if (string? teardown) [teardown] teardown)]
-                    (doseq [td teardown]
-                      (try
-                        (shell shell-opts td)
-                        (catch Throwable _
-                          (println (format "Teardown '%s' failed" td))))))))))))
+                            (io/file dir (:test-dir lib))
+                            dir))]
+                (when dir
+                  (when (= :lein (:definition lib))
+                    (copy-profiles dir profile)
+                    (remove-pedantic dir))
+                  (let [lib (assoc lib :version version)
+                        shell-opts (merge {:dir dir :continue true}
+                                          (when-not (:test-out options)
+                                            {:out :string
+                                             :err :string}))
+                        setup (:setup lib)
+                        setup (cond (vector? setup) setup
+                                    (string? setup) [setup])
+                        cmd (test-cmd lib)]
+                    (doseq [setup-cmd setup
+                            :let [cmd
+                                  (cond
+                                    (string? setup-cmd) setup-cmd
+                                    (and (map? setup-cmd) (:deps.edn setup-cmd))
+                                    (test-cmd {:version version
+                                               :definition :deps.edn
+                                               :test-cmd (:deps.edn setup-cmd)})
+                                    :else nil)]]
+                      (if cmd
+                        (try
+                          (println "Running setup command:" cmd)
+                          (let [shell-opts
+                                (if (and (map? setup-cmd)
+                                         (:dir setup-cmd))
+                                  (update shell-opts :dir io/file (:dir setup-cmd))
+                                  shell-opts)]
+                            (shell shell-opts cmd))
+                          (catch Throwable _
+                            (println "Setup command failed")))
+                        (println "Setup command nil: " setup)))
+                    (try
+                      (println "Running test command:" cmd)
+                      (let [test-result (shell shell-opts cmd)
+                            k (if (zero? (:exit test-result)) :success :failure)]
+                        (swap! results update k conj (:name lib))
+                        (when (= k :failure)
+                          (println (str (:name lib) " tests did not pass"))))
+                      (catch Throwable e
+                        (prn e)
+                        (swap! results update :failure conj (:name lib))))
+                    (let [teardown (:teardown lib)
+                          teardown (if (string? teardown) [teardown] teardown)]
+                      (doseq [td teardown]
+                        (try
+                          (shell shell-opts td)
+                          (catch Throwable _
+                            (println (format "Teardown '%s' failed" td)))))))))))))
     (pprint/pprint (:failure @results))))
 
 (def cli-options
   [[nil "--[no-]build" "Recompile and install clojure snapshot jar"
-    :default true]
-   ["-b" "--branch" "clojure-local-dev branch to use"
+    :default false]
+   ["-b" "--branch BRANCH" "clojure-local-dev branch to use"
     :default "master"]
    ["-l" "--library LIBRARY" "Specific library to check"
     :parse-fn symbol]

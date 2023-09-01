@@ -349,9 +349,9 @@
     :git/sha "a4cb207f2fec08219a1bba115a69819b2c7a256c"}
    {:name 'borkdude/dynaload
     :definition :deps.edn
-    :test-cmd "-A:clj-test"
+    :test-cmd "-M:clj-test"
     :git/url "https://github.com/borkdude/dynaload.git"
-    :git/tag "v0.3.5"}
+    :git/sha "ca924290a19a34238ffa7ec2b1817dd55fa202f8"}
    {:name 'cerner/clara-rules
     :definition :lein
     :setup ["sed -i -e 's/leiningen.cljsbuild//g' project.clj"]
@@ -552,7 +552,7 @@
     :git/tag "v1.2.0"}
    {:name 'igjoshua/farolero
     :definition :deps.edn
-    :setup {:deps.edn "-X:deps prep"}
+    :setup {:deps.edn "-X:build"}
     :test-cmd "-M:dev:test:runner"
     :git/url "https://github.com/IGJoshua/farolero.git"
     :git/tag "v1.5.0"}
@@ -1150,6 +1150,7 @@
                                              :err :string}))
                         setup (:setup lib)
                         setup (cond (vector? setup) setup
+                                    (map? setup) [setup]
                                     (string? setup) [setup])
                         cmd (test-cmd lib)]
                     (doseq [setup-cmd setup
@@ -1172,7 +1173,7 @@
                             (shell shell-opts cmd))
                           (catch Throwable _
                             (println "Setup command failed")))
-                        (println "Setup command nil: " setup)))
+                        (println "Setup command nil:" setup)))
                     (try
                       (println "Running test command:" cmd)
                       (let [test-result (shell shell-opts cmd)
@@ -1254,7 +1255,6 @@
 ;;
 ;; clj-commons/aleph
 ;; brandonbloom/backtick
-;; borkdude/dynaload
 ;; clojurewerkz/balagan
 ;; clojurewerkz/chash
 ;; clojurewerkz/mailer

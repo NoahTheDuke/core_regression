@@ -183,6 +183,7 @@
    {:name 'clj-commons/aleph
     :definition :lein
     :test-cmd "test"
+    :skip true ;; fails
     :git/url "https://github.com/clj-commons/aleph.git"
     :git/tag "0.6.3"}
    {:name 'clj-commons/byte-stream
@@ -543,6 +544,7 @@
    {:name 'ibdknox/colorize
     :definition :lein
     :test-cmd "test"
+    :skip true ;; no tests have been written lol
     :git/url "https://github.com/ibdknox/colorize.git"
     :git/sha "d89a13db5cc3e2c59cf397fab266f886f5ee9f7c"}
    {:name 'igjoshua/americano
@@ -611,6 +613,7 @@
    {:name 'liquidz/antq
     :definition :deps.edn
     :test-cmd "-M:dev:test"
+    :skip true ;; requires gradle, i'm not setting that up lol
     :git/url "https://github.com/liquidz/antq.git"
     :git/tag "2.5.1109"}
    {:name 'liquidz/build.edn
@@ -631,7 +634,7 @@
    {:name 'marick/midje
     :definition :lein
     :test-cmd "midje"
-    :skip true
+    :skip true ;; dev set-up relies on pre-1.10 error messages
     :git/url "https://github.com/marick/Midje.git"
     :git/sha "34819ae8d24a11b0f953d461f94e09a2638ff385"}
    {:name 'metosin/compojure-api
@@ -715,7 +718,7 @@
     :git/tag "0.2.8"}
    {:name 'mtgred/netrunner
     :definition :lein
-    :setup "[ ! -f data/cards.edn ] && lein fetch --no-db --no-card-images"
+    :setup "! test -f data/cards.edn && lein fetch --no-db --no-card-images"
     :test-cmd "eftest"
     :git/url "https://github.com/mtgred/netrunner.git"
     :git/sha "dffc1fabd2d5ba8c2cf44a8d6b30d14a3c2daef0"}
@@ -728,6 +731,7 @@
    {:name 'ninjudd/clojure-complete
     :definition :lein
     :test-cmd "test"
+    :skip true ;; outdated expectations about clojure.core
     :git/url "https://github.com/ninjudd/clojure-complete.git"
     :git/tag "0.2.5"}
    {:name 'paraseba/faker
@@ -1188,9 +1192,11 @@
                           teardown (if (string? teardown) [teardown] teardown)]
                       (doseq [td teardown]
                         (try
+                          (println "Running teardown command:" td)
                           (shell shell-opts td)
                           (catch Throwable _
                             (println (format "Teardown '%s' failed" td)))))))))))))
+    (newline)
     (pprint/pprint (:failure @results))))
 
 (def cli-options
@@ -1253,23 +1259,9 @@
 
 ;; current failures (not skipped):
 ;;
-;; clj-commons/aleph
-;; brandonbloom/backtick
-;; clojurewerkz/balagan
-;; clojurewerkz/chash
-;; clojurewerkz/mailer
-;; clojurewerkz/meltdown
-;; clojurewerkz/propertied
-;; clojurewerkz/quartzite
-;; clojurewerkz/route-one
-;; clojurewerkz/scrypt
-;; clojurewerkz/serialism
-;; clojurewerkz/support
-;; clojurewerkz/validateur
-;; ibdknox/colorize
-;; juxt/dirwatch
+;; liquidz/antq
 ;; liquidz/build.edn
-;; ninjudd/clojure-complete
+;; pedestal/pedestal
 ;; raynes/fs
 ;; wkf/hawk
 ;; yogthos/json-html
@@ -1285,7 +1277,6 @@
 ;; marick/suchwow
 ;; medley/medley
 ;; meta-merge/meta-merge
-;; midje/midje
 ;; mvxcvi/arrangement
 ;; mvxcvi/puget
 ;; net.cgrand/macrovich

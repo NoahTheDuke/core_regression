@@ -1495,7 +1495,10 @@
         (if (:skip lib)
           (println "Skipping" (:name lib))
           (do (println "Testing" (:name lib))
-              (let [dir (lib-dir lib) 
+              (let [dir (try (lib-dir lib)
+                             (catch Throwable _
+                               (println "Failed to clone" (:name lib))
+                               nil)) 
                     dir (when dir
                           (if (:test-dir lib)
                             (io/file dir (:test-dir lib))

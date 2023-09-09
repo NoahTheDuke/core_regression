@@ -461,7 +461,7 @@
    {:name 'clojurewerkz/meltdown
     :definition :lein
     :setup ["sed -i -e 's/1.1.6.BUILD-SNAPSHOT/1.1.6.RELEASE/g' project.clj"
-            "sed -i -e 's/:javac-options.*//g' project.clj"
+            "sed -i -e 's/:javac-options \\[.*\\]//g' project.clj"
             "sed -i -e 's/\"-XX:+UseFastAccessorMethods\"//g' project.clj"]
     :test-cmd "test"
     :git/url "https://github.com/clojurewerkz/meltdown.git"
@@ -770,7 +770,7 @@
     :git/tag "1.2.15.1"}
    {:name 'kkinnear/zprint
     :definition :deps.edn
-    :test-cmd "-M:cljtest:runner"
+    :test-cmd "-M:cljtest:test"
     :git/url "https://github.com/kkinnear/zprint.git"
     :git/tag "1.2.7"}
    {:name 'lambdaisland/clj-diff
@@ -1342,13 +1342,13 @@
    {:name 'ztellman/clj-radix
     :definition :lein
     :test-cmd "test"
-    :setup "sed -i -e 's/:javac-options.*//g' project.clj"
+    :setup "sed -i -e 's/:javac-options \\[.*\\]//g' project.clj"
     :git/url "https://github.com/ztellman/clj-radix.git"
     :git/tag "0.1.0"}
    {:name 'ztellman/clj-tuple
     :definition :lein
     :test-cmd "test"
-    :setup "sed -i -e 's/:javac-options.*//g' project.clj"
+    :setup "sed -i -e 's/:javac-options \\[.*\\]//g' project.clj"
     :git/url "https://github.com/ztellman/clj-tuple.git"
     :git/tag "0.2.2"}
    {:name 'ztellman/collections-check
@@ -1359,13 +1359,13 @@
    {:name 'ztellman/narrator
     :definition :lein
     :test-cmd "test"
-    :setup "sed -i -e 's/:javac-options.*//g' project.clj"
+    :setup "sed -i -e 's/:javac-options \\[.*\\]//g' project.clj"
     :git/url "https://github.com/ztellman/narrator.git"
     :git/tag "0.1.2"}
    {:name 'ztellman/proteus
     :definition :lein
     :test-cmd "test"
-    :setup "sed -i -e 's/:javac-options.*//g' project.clj"
+    :setup "sed -i -e 's/:javac-options \\[.*\\]//g' project.clj"
     :git/url "https://github.com/ztellman/proteus.git"
     :git/tag "0.1.6"}
    {:name 'ztellman/penumbra
@@ -1376,7 +1376,7 @@
    {:name 'ztellman/riddley
     :definition :lein
     :test-cmd "test"
-    :setup "sed -i -e 's/:javac-options.*//g' project.clj"
+    :setup "sed -i -e 's/:javac-options \\[.*\\]//g' project.clj"
     :git/url "https://github.com/ztellman/riddley.git"
     :git/tag "0.2.0"}
    {:name 'ztellman/sleight
@@ -1481,8 +1481,8 @@
         profile (-> (io/resource "profiles.clj")
                     slurp
                     (str/replace "CLOJURE_VERSION" version))
-        filter-fn (if-let [chosen-library (:library options)]
-                    #(= chosen-library (:name %))
+        filter-fn (if-let [libraries (not-empty (set (seq (:library options))))]
+                    #(libraries (:name %))
                     (if-let [chosen-ns (:namespace options)]
                       #(= chosen-ns (namespace (:name %)))
                       identity))
@@ -1565,6 +1565,9 @@
    ["-b" "--branch BRANCH" "clojure-local-dev branch to use"
     :default "master"]
    ["-l" "--library LIBRARY" "Specific library to check"
+    :multi true
+    :default #{}
+    :update-fn conj
     :parse-fn symbol]
    ["-n" "--namespace NAMESPACE" "Namespace of libraries to check"]
    [nil "--[no-]test-out" "Print test out to STOUT"
@@ -1617,11 +1620,37 @@
 
 ;; Full run: 40 min
 
-;; current failures (not skipped):
-;;
-;; liquidz/antq
-;; liquidz/build.edn
-;; pedestal/pedestal
-;; raynes/fs
-;; wkf/hawk
-;; yogthos/json-html
+; current failures (not skipped):
+;
+; davidsantiago/pathetic
+; davidsantiago/stencil
+; funcool/buddy-hashers
+; greglook/alphabase
+; greglook/clj-arraignment
+; greglook/merkledag-core
+; hcarvalhoalves/raven-clj
+; juxt/dirwatch
+; lambdaisland/deep-diff2
+; lambdaisland/facai
+; lambdaisland/uri
+; liquidz/build.edn
+; magnars/prone
+; metosin/porsas
+; plumatic/hiphip
+; plumatic/plumbing
+; raynes/fs
+; sattvik/leinjacker
+; scgilardi/slingshot
+; taoensso/faraday
+; technomancy/robert-hooke
+; technomancy/slamhound
+; walmartlabs/lacinia
+; wkf/hawk
+; yogthos/json-html
+; yogthos/migratus
+; ztellman/cambrian-collections
+; ztellman/clj-tuple
+; ztellman/narrator
+; ztellman/penumbra
+; ztellman/riddley
+; ztellman/vertigo

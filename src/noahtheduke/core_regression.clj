@@ -337,6 +337,11 @@
     :test-cmd "test"
     :git/url "https://github.com/aphyr/dom-top.git"
     :git/tag "v1.0.8"}
+   {:name 'aphyr/less-awful-ssl
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/aphyr/less-awful-ssl.git"
+    :git/tag "1.0.6"}
    {:name 'brandonbloom/backtick
     :definition :lein
     :test-cmd "test"
@@ -369,6 +374,43 @@
     :test-cmd "test"
     :git/url "https://github.com/cemerick/url.git"
     :git/tag "0.1.1"}
+   {:name 'cgrand/enlive
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/cgrand/enlive.git"
+    :git/sha "119ab97dd683681683354b60e356ed748bad5e78"}
+   {:name 'cgrand/macrovich
+    :definition :lein
+    :test-cmd "test"
+    :skip true ;; no tests
+    :git/url "https://github.com/cgrand/macrovich.git"
+    :git/sha "95f0fa924ec774a9fa6845f474c2aba7322fea14"}
+   {:name 'cgrand/parsley
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/cgrand/regex.git"
+    :git/sha "200ce13e07b7c4da67b2d2dafc9f708cffeec66c"}
+   {:name 'cgrand/regex
+    :definition :lein
+    :test-cmd "test"
+    :skip true ;; no tests
+    :git/url "https://github.com/cgrand/regex.git"
+    :git/sha "200ce13e07b7c4da67b2d2dafc9f708cffeec66c"}
+   {:name 'cgrand/seqexp
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/cgrand/seqexp.git"
+    :git/sha "b2831c0b48f0e6fe364d3714f56bb224e43d0be1"}
+   {:name 'cgrand/sjacket
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/cgrand/sjacket.git"
+    :git/sha "4aa60211cfac0268aa4faa6c3955d48d00c5436d"}
+   {:name 'cgrand/xforms
+    :definition :deps.edn
+    :test-cmd "-M:test:kaocha"
+    :git/url "https://github.com/cgrand/xforms.git"
+    :git/tag "v0.19.5"}
    {:name 'clojurewerkz/archimedes
     :definition :lein
     :setup "lein with-profile +dev javac"
@@ -510,6 +552,31 @@
     :test-cmd "test :all"
     :git/url "https://github.com/dakrone/clj-http.git"
     :git/tag "3.12.3"}
+   {:name 'dakrone/tigris
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/dakrone/tigris.git"
+    :git/tag "3.12.3"}
+   {:name 'davidsantiago/pathetic
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/davidsantiago/pathetic.git"
+    :git/tag "0.5.1"}
+   {:name 'davidsantiago/quoin
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/davidsantiago/quoin.git"
+    :git/tag "0.1.2"}
+   {:name 'davidsantiago/stencil
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/davidsantiago/stencil.git"
+    :git/tag "0.5.0"}
+   {:name 'droitfintech/clj-diff
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/droitfintech/clj-diff.git"
+    :git/tag "9a26f88fe9d2295b9472b996d7df6fefb133888b"}
    {:name 'duckyuck/flare
     :definition :lein
     :test-cmd "test"
@@ -525,6 +592,41 @@
     :test-cmd "test"
     :git/url "https://github.com/Engelberg/instaparse.git"
     :git/tag "v1.4.12"}
+   {:name 'funcool/buddy-auth
+    :definition :deps.edn
+    :test-cmd "-X:dev:test"
+    :git/url "https://github.com/funcool/buddy-auth.git"
+    :git/tag "3.0.323"}
+   {:name 'funcool/buddy-core
+    :definition :deps.edn
+    :test-cmd "-X:dev:test"
+    :git/url "https://github.com/funcool/buddy-core.git"
+    :git/tag "1.11.423"}
+   {:name 'funcool/buddy-hashers
+    :definition :deps.edn
+    :test-cmd "-X:dev:test"
+    :git/url "https://github.com/funcool/buddy-hashers.git"
+    :git/tag "2.0.167"}
+   {:name 'funcool/buddy-sign
+    :definition :deps.edn
+    :test-cmd "-X:dev:test"
+    :git/url "https://github.com/funcool/buddy-sign.git"
+    :git/tag "2.0.167"}
+   {:name 'funcool/cats
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/funcool/cats.git"
+    :git/sha "73b4ecc6e2e0c7cb72e2d57ea6ff5471a0ab17f3"}
+   {:name 'funcool/cuerdas
+    :definition :deps.edn
+    :test-cmd "-X:dev:test"
+    :git/url "https://github.com/funcool/cuerdas.git"
+    :git/tag "2022.06.16-403"}
+   {:name 'funcool/promesa
+    :definition :deps.edn
+    :test-cmd "-J-Djdk.tracePinnedThreads=full -J--enable-preview -X:dev:test"
+    :git/url "https://github.com/funcool/promesa.git"
+    :git/tag "11.0.671"}
    {:name 'gfredericks/test.chuck
     :definition :lein
     :test-cmd "test"
@@ -535,6 +637,56 @@
     :test-cmd "test"
     :git/url "https://github.com/geoffsalmon/bytebuffer.git"
     :git/sha "dee223c57456fa1afd600f447114622fa333efd3"}
+   {:name 'greglook/alphabase
+    :definition :lein
+    :test-cmd "kaocha"
+    :git/url "https://github.com/greglook/alphabase.git"
+    :git/tag "2.1.1"}
+   {:name 'greglook/blocks
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/greglook/blocks.git"
+    :git/tag "2.0.4"}
+   {:name 'greglook/clj-arraignment
+    :definition :lein
+    :test-cmd "kaocha"
+    :git/url "https://github.com/greglook/clj-arrangement.git"
+    :git/tag "2.1.0"}
+   {:name 'greglook/clj-cbor
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/greglook/clj-cbor.git"
+    :git/tag "1.1.1"}
+   {:name 'greglook/clj-multiformats
+    :definition :deps.edn
+    :test-cmd "-M:dev:test"
+    :git/url "https://github.com/greglook/clj-multiformats.git"
+    :git/tag "0.15.0"}
+   {:name 'greglook/clj-pgp
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/greglook/clj-pgp.git"
+    :git/tag "1.1.0"}
+   {:name 'greglook/cljstyle
+    :definition :lein
+    :test-cmd "kaocha"
+    :git/url "https://github.com/greglook/cljstyle.git"
+    :git/tag "0.15.0"}
+   {:name 'greglook/merkledag-core
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/greglook/merkledag-core.git"
+    :git/sha "df8a5ce5bb25d3af23dc4b46f652f44b3d4975f4"}
+   {:name 'greglook/puget
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/greglook/puget.git"
+    :git/tag "1.3.4"}
+   {:name 'hcarvalhoalves/raven-clj
+    :definition :lein
+    :test-cmd "midje"
+    :git/url "https://github.com/hcarvalhoalves/raven-clj.git"
+    :git/sha "2f9914d8629d878ca12a33a469edef346c21d42d"}
    {:name 'http-kit/http-kit
     :definition :lein
     :test-cmd "test"
@@ -547,6 +699,12 @@
     :skip true ;; no tests have been written lol
     :git/url "https://github.com/ibdknox/colorize.git"
     :git/sha "d89a13db5cc3e2c59cf397fab266f886f5ee9f7c"}
+   {:name 'ibdknox/watchtower
+    :definition :lein
+    :test-cmd "test"
+    :skip true ;; no tests have been written lol
+    :git/url "https://github.com/ibdknox/watchtower.git"
+    :git/sha "dbbfd612e1b626146628b0bda5572479da6994c4"}
    {:name 'igjoshua/americano
     :definition :deps.edn
     :test-cmd "-M:test:runner"
@@ -610,6 +768,47 @@
     :skip true
     :git/url "https://github.com/juxt/yada.git"
     :git/tag "1.2.15.1"}
+   {:name 'kkinnear/zprint
+    :definition :deps.edn
+    :test-cmd "-M:cljtest:runner"
+    :git/url "https://github.com/kkinnear/zprint.git"
+    :git/tag "1.2.7"}
+   {:name 'lambdaisland/clj-diff
+    :definition :deps.edn
+    :test-cmd "-M:dev:test -m kaocha.runner"
+    :git/url "https://github.com/lambdaisland/clj-diff.git"
+    :git/sha "bea9affa8549b1513d92aa7812062cdbd10e2ff5"}
+   {:name 'lambdaisland/deep-diff2
+    :definition :deps.edn
+    :test-cmd "-M:test -m kaocha.runner"
+    :git/url "https://github.com/lambdaisland/deep-diff2.git"
+    :git/tag "v2.9.202"}
+   {:name 'lambdaisland/facai
+    :definition :deps.edn
+    :test-cmd "-M:test -m kaocha.runner"
+    :git/url "https://github.com/lambdaisland/facai.git"
+    :git/tag "v0.8.68-alpha"}
+   {:name 'lambdaisland/kaocha
+    :definition :deps.edn
+    :test-cmd "-M:test -m kaocha.runner"
+    :git/url "https://github.com/lambdaisland/kaocha.git"
+    :git/tag "v1.86.1355"}
+   {:name 'lambdaisland/ornament
+    :definition :deps.edn
+    :setup "npm install ws"
+    :test-cmd "-M:test -m kaocha.runner"
+    :git/url "https://github.com/lambdaisland/ornament.git"
+    :git/tag "v1.10.94"}
+   {:name 'lambdaisland/uniontypes
+    :definition :lein
+    :test-cmd "kaocha"
+    :git/url "https://github.com/lambdaisland/uniontypes.git"
+    :git/sha "d1b847098284130fb0ff3ed786ade8cf83dfa399"}
+   {:name 'lambdaisland/uri
+    :definition :deps.edn
+    :test-cmd "-M:test -m kaocha.runner"
+    :git/url "https://github.com/lambdaisland/uri.git"
+    :git/tag "v1.15.125"}
    {:name 'liquidz/antq
     :definition :deps.edn
     :test-cmd "-M:dev:test"
@@ -631,12 +830,22 @@
     :test-cmd "-M:dev:test"
     :git/url "https://github.com/liquidz/testdoc.git"
     :git/tag "1.5.109"}
+   {:name 'magnars/prone
+    :definition :lein
+    :test-cmd "kaocha"
+    :git/url "https://github.com/magnars/prone.git"
+    :git/tag "2021-04-23"}
    {:name 'marick/midje
     :definition :lein
     :test-cmd "midje"
     :skip true ;; dev set-up relies on pre-1.10 error messages
     :git/url "https://github.com/marick/Midje.git"
     :git/sha "34819ae8d24a11b0f953d461f94e09a2638ff385"}
+   {:name 'marick/suchwow
+    :definition :lein
+    :test-cmd "midje"
+    :git/url "https://github.com/marick/suchwow.git"
+    :git/sha "111cd4aa21ee23552742701bfe52e593b65fb0f8"}
    {:name 'metosin/compojure-api
     :definition :lein
     :test-cmd "midje"
@@ -734,6 +943,26 @@
     :skip true ;; outdated expectations about clojure.core
     :git/url "https://github.com/ninjudd/clojure-complete.git"
     :git/tag "0.2.5"}
+   {:name 'nrepl/bencode
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/nrepl/bencode.git"
+    :git/sha "4286ceef3cc7e9531b8e1650d0a1ff243b150dcd"}
+   {:name 'nrepl/nrepl
+    :definition :lein
+    :test-cmd "kaocha"
+    :git/url "https://github.com/nrepl/nrepl.git"
+    :git/sha "5839006c5f522fd5e6cf2adbcc5b59e4bd0677dd"}
+   {:name 'nubank/matcher-combinators
+    :definition :deps.edn
+    :test-cmd "-M:dev:clj-test:test-runner"
+    :git/url "https://github.com/nubank/matcher-combinators.git"
+    :git/tag "3.8.8"}
+   {:name 'nubank/state-flow
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/nubank/state-flow.git"
+    :git/tag "5.14.4"}
    {:name 'paraseba/faker
     :definition :lein
     :test-cmd "test"
@@ -749,16 +978,31 @@
     :test-dir "tests"
     :git/url "https://github.com/pedestal/pedestal.git"
     :git/sha "9b02e4c4a9b87c718ed7f3f7bcdab032e84336a7"}
+   {:name 'plumatic/hiphip
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/plumatic/hiphip.git"
+    :git/tag "57d8d4130b50985a1ea24dff1df7d715e80447a5"}
+   {:name 'plumatic/plumbing
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/plumatic/plumbing.git"
+    :git/tag "plumbing-0.6.0"}
    {:name 'plumatic/schema
     :definition :lein
     :test-cmd "test"
     :git/url "https://github.com/plumatic/schema.git"
     :git/tag "1.4.1"}
-   {:name 'plumatic/schema
+   {:name 'plumatic/schema-generators
     :definition :lein
     :test-cmd "test"
-    :git/url "https://github.com/plumatic/plumbing.git"
-    :git/tag "plumbing-0.6.0"}
+    :git/url "https://github.com/plumatic/schema-generators.git"
+    :git/tag "schema-generators-0.1.5"}
+   {:name 'pjstadig/humane-test-output
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/pjstadig/humane-test-output.git"
+    :git/tag "0.11.0"}
    {:name 'raynes/fs
     :definition :lein
     :test-cmd "test"
@@ -789,6 +1033,21 @@
     :test-cmd "sub test"
     :git/url "https://github.com/ring-clojure/ring.git"
     :git/tag "1.10.0"}
+   {:name 'ring-clojure/ring-mock
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/ring-clojure/ring-mock.git"
+    :git/tag "0.4.0"}
+   {:name 'sattvik/leinjacker
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/sattvik/leinjacker.git"
+    :git/tag "0.4.3"}
+   {:name 'scgilardi/slingshot
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/scgilardi/slingshot.git"
+    :git/tag "0.12.2"}
    {:name 'seancorfield/honeysql
     :definition :deps.edn
     :test-cmd "-T:build test"
@@ -865,6 +1124,21 @@
     :test-cmd "test"
     :git/url "https://github.com/taoensso/tufte.git"
     :git/tag "v2.5.1"}
+   {:name 'technomancy/robert-hooke
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/technomancy/robert-hooke.git"
+    :git/tag "1.3.0"}
+   {:name 'technomancy/slamhound
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/technomancy/slamhound.git"
+    :git/sha "68bad50282b8b559eb012d6574ef6a0e1485b3a2"}
+   {:name 'tobereplaced/lettercase
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/ToBeReplaced/lettercase.git"
+    :git/sha "90cdf47de653c5b9be433e17b87cbda6433122ac"}
    {:name 'tonsky/compact-uuids
     :definition :lein
     :test-cmd "test"
@@ -885,6 +1159,11 @@
     :test-cmd "-M:test -m uberdeps.test"
     :git/url "https://github.com/tonsky/uberdeps.git"
     :git/tag "1.3.0"}
+   {:name 'trptcolin/versioneer
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/trptcolin/versioneer.git"
+    :git/sha "fca12c87420f663f832ac0687a482a487d2e2e4b"}
    {:name 'walmartlabs/lacinia
     :definition :deps.edn
     :test-cmd "-X:dev:test"
@@ -974,6 +1253,21 @@
     :test-cmd "test"
     :git/url "https://github.com/weavejester/medley.git"
     :git/tag "1.7.0"}
+   {:name 'weavejester/meta-merge
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/weavejester/meta-merge.git"
+    :git/tag "1.0.0"}
+   {:name 'weavejester/ns-tracker
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/weavejester/ns-tracker.git"
+    :git/sha "e693225c6f920f633aa383c11bc80171e1aa53aa"}
+   {:name 'weavejester/progrock
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/weavejester/progrock.git"
+    :git/sha "9c277a3244c52bfde19c21add327d6e20b94fdf5"}
    {:name 'weavejester/ragtime
     :definition :lein
     :test-cmd "sub test"
@@ -994,6 +1288,11 @@
     :test-cmd "test"
     :git/url "https://github.com/wkf/hawk.git"
     :git/sha "a5c21e1305dbae8b8511090cc017faf99ada3b04"}
+   {:name 'xsc/pandect
+    :definition :lein
+    :test-cmd "kaocha"
+    :git/url "https://github.com/xsc/pandect.git"
+    :git/tag "v1.0.2"}
    {:name 'yogthos/clj-rss
     :definition :lein
     :test-cmd "test"
@@ -1030,13 +1329,71 @@
     :test-cmd "-X:dev:test"
     :git/url "https://github.com/yogthos/Selmer.git"
     :git/sha "151b81a0c904b07444f37382132bd9e39add01f2"}
+   {:name 'ztellman/automat
+    :definition :lein
+    :test-cmd "do clean, javac, compile, test"
+    :git/url "https://github.com/ztellman/automat.git"
+    :git/sha "eacbb36184e26f633da5018e28af5755acb50123"}
+   {:name 'ztellman/cambrian-collections
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/ztellman/cambrian-collections.git"
+    :git/sha "35c80f0afde9f5bf33e63f93c859d4baa9981f4c"}
+   {:name 'ztellman/clj-radix
+    :definition :lein
+    :test-cmd "test"
+    :setup "sed -i -e 's/:javac-options.*//g' project.clj"
+    :git/url "https://github.com/ztellman/clj-radix.git"
+    :git/tag "0.1.0"}
    {:name 'ztellman/clj-tuple
     :definition :lein
     :test-cmd "test"
     :setup "sed -i -e 's/:javac-options.*//g' project.clj"
-    ; :skip true ;; collection-test is not a valid library anymore
     :git/url "https://github.com/ztellman/clj-tuple.git"
     :git/tag "0.2.2"}
+   {:name 'ztellman/collections-check
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/ztellman/collections-check.git"
+    :git/tag "0.1.7"}
+   {:name 'ztellman/narrator
+    :definition :lein
+    :test-cmd "test"
+    :setup "sed -i -e 's/:javac-options.*//g' project.clj"
+    :git/url "https://github.com/ztellman/narrator.git"
+    :git/tag "0.1.2"}
+   {:name 'ztellman/proteus
+    :definition :lein
+    :test-cmd "test"
+    :setup "sed -i -e 's/:javac-options.*//g' project.clj"
+    :git/url "https://github.com/ztellman/proteus.git"
+    :git/tag "0.1.6"}
+   {:name 'ztellman/penumbra
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/ztellman/penumbra.git"
+    :git/sha "db43d01c280305beab26d1004ae78b1777ab3fc7"}
+   {:name 'ztellman/riddley
+    :definition :lein
+    :test-cmd "test"
+    :setup "sed -i -e 's/:javac-options.*//g' project.clj"
+    :git/url "https://github.com/ztellman/riddley.git"
+    :git/tag "0.2.0"}
+   {:name 'ztellman/sleight
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/ztellman/sleight.git"
+    :git/tag "0.2.2"}
+   {:name 'ztellman/vertigo
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/ztellman/vertigo.git"
+    :git/tag "0.1.4"}
+   {:name 'ztellman/virgil
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/ztellman/virgil.git"
+    :git/sha "0aaf05a69a3d1639622be48a766eac372231047c"}
   ])
 
 (defn all-libraries []
@@ -1265,57 +1622,3 @@
 ;; raynes/fs
 ;; wkf/hawk
 ;; yogthos/json-html
-
-;; libraries to add:
-;;
-;; lambdaisland/clj-diff
-;; lambdaisland/deep-diff
-;; lambdaisland/deep-diff2
-;; leinjacker/leinjacker
-;; less-awful-ssl/less-awful-ssl
-;; manifold/manifold
-;; marick/suchwow
-;; medley/medley
-;; meta-merge/meta-merge
-;; mvxcvi/arrangement
-;; mvxcvi/puget
-;; net.cgrand/macrovich
-;; net.cgrand/parsley
-;; net.cgrand/regex
-;; net.cgrand/sjacket
-;; nrepl/bencode
-;; nrepl/nrepl
-;; ns-tracker/ns-tracker
-;; nubank/matcher-combinators
-;; org.clojars.brenton/google-diff-match-patch
-;; org.clojars.hcarvalhoalves/raven-clj
-;; org.flatland/useful
-;; org.thnetos/cd-client
-;; org.tobereplaced/lettercase
-;; pandect/pandect
-;; pathetic/pathetic
-;; pjstadig/humane-test-output
-;; potemkin/potemkin
-;; primitive-math/primitive-math
-;; prismatic/plumbing
-;; prismatic/schema
-;; prismatic/schema-generators
-;; progrock/progrock
-;; prone/prone
-;; quoin/quoin
-;; rewrite-clj/rewrite-clj
-;; rewrite-cljs/rewrite-cljs
-;; riddley/riddley
-;; ring/ring-anti-forgery
-;; ring/ring-codec
-;; ring/ring-core
-;; ring/ring-defaults
-;; ring/ring-headers
-;; ring/ring-ssl
-;; ring-mock/ring-mock
-;; robert/hooke
-;; slingshot/slingshot
-;; tech.droit/clj-diff
-;; tigris/tigris
-;; trptcolin/versioneer
-;; watchtower/watchtower

@@ -345,9 +345,8 @@
    {:name 'brandonbloom/backtick
     :definition :lein
     :test-cmd "test"
-    :skip true ;; relies on pre-1.10 buggy behavior
     :git/url "https://github.com/brandonbloom/backtick.git"
-    :git/sha "9bea36d77c1815c21d86de290a199a975416b36f"}
+    :git/sha "0463b49ddb0863653231fc6c922bb124ff5f7d25"}
    {:name 'brandonbloom/fipp
     :definition :lein
     :test-cmd "test"

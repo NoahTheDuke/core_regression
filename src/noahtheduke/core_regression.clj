@@ -1474,9 +1474,7 @@
   (let [branch (:branch options)
         {:keys [path version jar]} (compile-clojure
                                      options
-                                     (str (System/getProperty "user.home")
-                                          "/personal/clojure-local-dev/"
-                                          branch))
+                                     (io/file ".." "clojure-local-dev" branch))
         profile (-> (io/resource "profiles.clj")
                     slurp
                     (str/replace "CLOJURE_VERSION" version))

@@ -23,6 +23,38 @@ I have been unable to figure out an automatic method of determining the
 necessary setup and test commands for a given clojure repo, so until then, we'll
 have to continue to manually add libraries and specify working tags or shas.
 
+## How to use
+
+Fork or clone the repo to some folder. In an adjacent folder, fork or clone
+[clojure-local-dev][clojure-local-dev]. Follow the instructions in that repo to
+set it up and then make a new branch you wish to test against (for example,
+you've called `./new-branch CLJ-2160-no-op-macro`). Now your base folder should
+look like:
+
+[clojure-local-dev]: https://github.com/frenchy64/clojure-local-dev
+
+```
+$ ls -a
+...
+clojure-local-dev
+core_regression
+...
+```
+
+`core_regression` uses `tools.cli`, so the options should be fairly obvious. Run
+with `clojure -M:run [opts]*`. Opts can be:
+
+* `--[no-]build`: Recompile and install clojure snapshot jar. Defaults to
+    `false.`
+* `--[no-]test-out`: Print test out to `stdout`. Defaults to `false`.
+* `-b`, `--branch`: clojure-local-dev branch to use. Defaults to `master`.
+* `-l`, `--library`: Specific libraries to check. (Can be given multiple times.)
+* `-n`, `--namespace`: Namespace of libraries to check.
+* `-h`, `--help`: The help string.
+
+`--build` will call `mvn -ntp -q -Dmaven.test.skip=true clean package`. The
+resulting jar will be copied directly into `~/.m2`.
+
 ## License
 
 Copyright © Noah

@@ -788,6 +788,11 @@
     :test-cmd "-M:dev:test:runner"
     :git/url "https://github.com/IGJoshua/farolero.git"
     :git/tag "v1.5.0"}
+   {:name 'juji-io/datalevin
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/juji-io/datalevin.git"
+    :git/tag "0.8.19"}
    {:name 'juxt/aero
     :definition :lein
     :test-cmd "test"
@@ -834,6 +839,11 @@
     :test-cmd "-M:test-clj -m kaocha.runner"
     :git/url "https://github.com/juxt/tick.git"
     :git/tag "0.6.1"}
+   {:name 'juxt/xtdb
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/xtdb/xtdb.git"
+    :git/tag "1.24.0"}
    {:name 'juxt/yada
     :definition :lein
     :test-cmd "test"
@@ -886,6 +896,16 @@
     :test-cmd "-M:test -m kaocha.runner"
     :git/url "https://github.com/lambdaisland/uri.git"
     :git/tag "v1.15.125"}
+   {:name 'lilactown/cascade
+    :definition :deps.edn
+    :test-cmd "-M:test -m kaocha.runner"
+    :git/url "https://github.com/lilactown/cascade.git"
+    :git/tag "v2.0.1"}
+   {:name 'lilactown/pyramid
+    :definition :deps.edn
+    :test-cmd "-M:test -m kaocha.runner"
+    :git/url "https://github.com/lilactown/pyramid.git"
+    :git/tag "3.3.0"}
    {:name 'liquidz/antq
     :definition :deps.edn
     :test-cmd "-M:dev:test"
@@ -1116,6 +1136,11 @@
     :test-cmd "test"
     :git/url "https://github.com/pjstadig/humane-test-output.git"
     :git/tag "0.11.0"}
+   {:name 'quoll/asami
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/quoll/asami.git"
+    :git/tag "v2.3.3"}
    {:name 'raynes/fs
     :definition :lein
     :test-cmd "test"
@@ -1141,6 +1166,11 @@
     :test-cmd "test"
     :git/url "https://github.com/redplanetlabs/vector-backed-sorted-map.git"
     :git/sha "1a63e6ab4ddd2f580873be1823937868f2513e08"}
+   {:name 'replikativ/datahike
+    :definition :deps.edn
+    :test-cmd "-M:test -m kaocha.runner"
+    :git/url "https://github.com/ring-clojure/ring.git"
+    :git/tag "0.6.1545"}
    {:name 'ring-clojure/ring
     :definition :lein
     :test-cmd "sub test"

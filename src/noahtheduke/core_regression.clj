@@ -342,6 +342,11 @@
     :test-cmd "test"
     :git/url "https://github.com/aphyr/less-awful-ssl.git"
     :git/tag "1.0.6"}
+   {:name 'athos/sweet-array
+    :definition :deps.edn
+    :test-cmd "-M:test"
+    :git/url "https://github.com/athos/sweet-array.git"
+    :git/tag "0.2.0"}
    {:name 'brandonbloom/backtick
     :definition :lein
     :test-cmd "test"
@@ -410,6 +415,11 @@
     :test-cmd "-M:test:kaocha"
     :git/url "https://github.com/cgrand/xforms.git"
     :git/tag "v0.19.5"}
+   {:name 'clj-kondo/clj-kondo
+    :definition :deps.edn
+    :test-cmd "-M:test"
+    :git/url "https://github.com/clj-kondo/clj-kondo.git"
+    :git/tag "v2023.09.07"}
    {:name 'clojure-lsp/clojure-lsp
     :definition :deps.edn
     :test-cmd "-M:test"
@@ -609,6 +619,21 @@
     :test-cmd "test"
     :git/url "https://github.com/Engelberg/instaparse.git"
     :git/tag "v1.4.12"}
+   {:name 'frenchy64/fixture-only
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/frenchy64/fixture-only.git"
+    :git/sha "a0815840c17e112f29ae8a77996aea64415ca8a5"}
+   {:name 'frenchy64/fully-satisfies
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/frenchy64/fully-satisfies.git"
+    :git/sha "aa0a873e67dd34078a2c58e638d7c5c73e1cd224"}
+   {:name 'frenchy64/typedclojure
+    :definition :deps.edn
+    :test-cmd "-M:kaocha:test -m kaocha.runner"
+    :git/url "https://github.com/typedclojure/typedclojure.git"
+    :git/tag "1.1.1"}
    {:name 'funcool/buddy-auth
     :definition :deps.edn
     :test-cmd "-X:dev:test"
@@ -709,6 +734,11 @@
     :test-cmd "test :all"
     :git/url "https://github.com/hiredman/clj-http-lite.git"
     :git/tag "0.2.0"}
+   {:name 'honeysql/honeysql
+    :definition :deps.edn
+    :test-cmd "-M:test:runner"
+    :git/url "https://github.com/seancorfield/honeysql.git"
+    :git/tag "v1.0.461"}
    {:name 'http-kit/http-kit
     :definition :lein
     :test-cmd "test"

@@ -365,7 +365,7 @@
     :git/tag "0.22.1"}
    {:name 'clj-time/clj-time
     :definition :lein
-    :test-cmd "test-all"
+    :test-cmd "with-profile dev,midje test"
     :git/url "https://github.com/clj-time/clj-time.git"
     :git/tag "v0.15.2"}
    {:name 'cemerick/url
@@ -387,8 +387,8 @@
    {:name 'cgrand/parsley
     :definition :lein
     :test-cmd "test"
-    :git/url "https://github.com/cgrand/regex.git"
-    :git/sha "200ce13e07b7c4da67b2d2dafc9f708cffeec66c"}
+    :git/url "https://github.com/cgrand/parsley.git"
+    :git/sha "c5c4783b5976b9412c80f35cf48ce79e77c9fee5"}
    {:name 'cgrand/regex
     :definition :lein
     :test-cmd "test"
@@ -410,6 +410,12 @@
     :test-cmd "-M:test:kaocha"
     :git/url "https://github.com/cgrand/xforms.git"
     :git/tag "v0.19.5"}
+   {:name 'clojure-lsp/clojure-lsp
+    :definition :deps.edn
+    :test-cmd "-M:test"
+    :test-dir "lib"
+    :git/url "https://github.com/clojure-lsp/clojure-lsp.git"
+    :git/tag "2023.08.06-00.28.06"}
    {:name 'clojurewerkz/archimedes
     :definition :lein
     :setup "lein with-profile +dev javac"
@@ -541,9 +547,15 @@
     :test-cmd "-M:dev-mac-m1:test" ;; personal machine specific...
     :git/url "https://github.com/cnuernber/dtype-next.git"
     :git/sha "bc08804e07a084cbd21056892d20e9b7c85ab937"}
+   {:name 'dakrone/cd-client
+    :definition :lein
+    :test-cmd "test"
+    :skip true ;; no tests
+    :git/url "https://github.com/dakrone/clojuredocs-client.git"
+    :git/sha "e556a5d7e3b6611246c04c5a07c9312289b6e807"}
    {:name 'dakrone/cheshire
     :definition :lein
-    :test-cmd "all test :all"
+    :test-cmd "test :all"
     :git/url "https://github.com/dakrone/cheshire.git"
     :git/tag "5.11.0"}
    {:name 'dakrone/clj-http
@@ -570,6 +582,12 @@
     :definition :lein
     :test-cmd "test"
     :git/url "https://github.com/davidsantiago/stencil.git"
+    :git/tag "0.5.0"}
+   {:name 'de.kotka/lazymap
+    :definition :lein
+    :test-cmd "test"
+    :skip true ;; repo has been deleted
+    :git/url "https://bitbucket.org/kotarak/lazymap.git"
     :git/tag "0.5.0"}
    {:name 'droitfintech/clj-diff
     :definition :lein
@@ -646,7 +664,7 @@
     :test-cmd "test"
     :git/url "https://github.com/greglook/blocks.git"
     :git/tag "2.0.4"}
-   {:name 'greglook/clj-arraignment
+   {:name 'greglook/clj-arrangement
     :definition :lein
     :test-cmd "kaocha"
     :git/url "https://github.com/greglook/clj-arrangement.git"
@@ -686,10 +704,15 @@
     :test-cmd "midje"
     :git/url "https://github.com/hcarvalhoalves/raven-clj.git"
     :git/sha "2f9914d8629d878ca12a33a469edef346c21d42d"}
+   {:name 'hiredman/clj-http-lite
+    :definition :lein
+    :test-cmd "test :all"
+    :git/url "https://github.com/hiredman/clj-http-lite.git"
+    :git/tag "0.2.0"}
    {:name 'http-kit/http-kit
     :definition :lein
     :test-cmd "test"
-    :skip true
+    :skip true ;; 1.9 spec fails
     :git/url "https://github.com/http-kit/http-kit.git"
     :git/tag "v2.7.0"}
    {:name 'ibdknox/colorize
@@ -774,9 +797,14 @@
     :git/tag "1.2.7"}
    {:name 'lambdaisland/clj-diff
     :definition :deps.edn
-    :test-cmd "-M:dev:test -m kaocha.runner"
+    :test-cmd "-M:test -m kaocha.runner"
     :git/url "https://github.com/lambdaisland/clj-diff.git"
     :git/sha "bea9affa8549b1513d92aa7812062cdbd10e2ff5"}
+   {:name 'lambdaisland/deep-diff
+    :definition :deps.edn
+    :test-cmd "-M:test -m kaocha.runner"
+    :git/url "https://github.com/lambdaisland/deep-diff2.git"
+    :git/tag "v0.0-47"}
    {:name 'lambdaisland/deep-diff2
     :definition :deps.edn
     :test-cmd "-M:test -m kaocha.runner"
@@ -819,6 +847,11 @@
     :test-cmd "-M:dev:test"
     :git/url "https://github.com/liquidz/build.edn.git"
     :git/tag "0.10.227"}
+   {:name 'liquidz/clj-jwt
+    :definition :lein
+    :test-cmd "midje"
+    :git/url "https://github.com/liquidz/clj-jwt.git"
+    :git/sha "8d4778a20a243ad6e0a8deae6500877c6c9de09f"}
    {:name 'liquidz/rewrite-indented
     :definition :deps.edn
     :test-cmd "-M:dev:test"
@@ -926,7 +959,7 @@
     :git/tag "0.2.8"}
    {:name 'mtgred/netrunner
     :definition :lein
-    :setup "! test -f data/cards.edn && lein fetch --no-db --no-card-images"
+    :setup "lein fetch --no-db --no-card-images"
     :test-cmd "eftest"
     :git/url "https://github.com/mtgred/netrunner.git"
     :git/sha "dffc1fabd2d5ba8c2cf44a8d6b30d14a3c2daef0"}
@@ -1032,11 +1065,36 @@
     :test-cmd "sub test"
     :git/url "https://github.com/ring-clojure/ring.git"
     :git/tag "1.10.0"}
+   {:name 'ring-clojure/ring-anti-forgery
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/ring-clojure/ring-anti-forgery.git"
+    :git/tag "1.3.0"}
+   {:name 'ring-clojure/ring-codec
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/ring-clojure/ring-codec.git"
+    :git/tag "1.2.0"}
+   {:name 'ring-clojure/ring-defaults
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/ring-clojure/ring-defaults.git"
+    :git/tag "0.4.0"}
+   {:name 'ring-clojure/ring-headers
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/ring-clojure/ring-headers.git"
+    :git/tag "0.3.0"}
    {:name 'ring-clojure/ring-mock
     :definition :lein
     :test-cmd "test"
     :git/url "https://github.com/ring-clojure/ring-mock.git"
     :git/tag "0.4.0"}
+   {:name 'ring-clojure/ring-ssl
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/ring-clojure/ring-ssl.git"
+    :git/tag "0.3.0"}
    {:name 'sattvik/leinjacker
     :definition :lein
     :test-cmd "test"
@@ -1138,6 +1196,12 @@
     :test-cmd "test"
     :git/url "https://github.com/ToBeReplaced/lettercase.git"
     :git/sha "90cdf47de653c5b9be433e17b87cbda6433122ac"}
+   {:name 'teropa/hiccups
+    :definition :lein
+    :test-cmd "test"
+    :skip true ;; cljs library
+    :git/url "https://github.com/teropa/hiccups.git"
+    :git/sha "v0.3.0"}
    {:name 'tonsky/compact-uuids
     :definition :lein
     :test-cmd "test"
@@ -1478,7 +1542,7 @@
         profile (-> (io/resource "profiles.clj")
                     slurp
                     (str/replace "CLOJURE_VERSION" version))
-        filter-fn (if-let [libraries (not-empty (set (seq (:library options))))]
+        filter-fn (if-let [libraries (not-empty (set (:library options)))]
                     #(libraries (:name %))
                     (if-let [chosen-ns (:namespace options)]
                       #(= chosen-ns (namespace (:name %)))
@@ -1554,7 +1618,8 @@
                           (catch Throwable _
                             (println (format "Teardown '%s' failed" td)))))))))))))
     (newline)
-    (pprint/pprint (:failure @results))))
+    (when-let [failures (seq (:failure @results))]
+      (pprint/pprint failures))))
 
 (def cli-options
   [[nil "--[no-]build" "Recompile and install clojure snapshot jar"

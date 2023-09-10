@@ -1793,37 +1793,46 @@
 
 ;; Full run: 40 min
 
-; current failures (not skipped):
-;
-; davidsantiago/pathetic
-; davidsantiago/stencil
-; funcool/buddy-hashers
-; greglook/alphabase
-; greglook/clj-arraignment
-; greglook/merkledag-core
-; hcarvalhoalves/raven-clj
-; juxt/dirwatch
-; lambdaisland/deep-diff2
-; lambdaisland/facai
-; lambdaisland/uri
-; liquidz/build.edn
-; magnars/prone
-; metosin/porsas
-; plumatic/hiphip
-; plumatic/plumbing
-; raynes/fs
-; sattvik/leinjacker
-; scgilardi/slingshot
-; taoensso/faraday
-; technomancy/robert-hooke
-; technomancy/slamhound
-; walmartlabs/lacinia
-; wkf/hawk
-; yogthos/json-html
-; yogthos/migratus
-; ztellman/cambrian-collections
-; ztellman/clj-tuple
-; ztellman/narrator
-; ztellman/penumbra
-; ztellman/riddley
-; ztellman/vertigo
+;; current failures (not skipped):
+;;
+;; cognitect-labs/aws-api
+;; cognitect-labs/fern
+;; davidsantiago/pathetic
+;; davidsantiago/stencil
+;; frenchy64/fixture-only
+;; frenchy64/fully-satisfies
+;; funcool/buddy-hashers
+;; greglook/alphabase
+;; greglook/clj-arrangement
+;; greglook/merkledag-core
+;; hcarvalhoalves/raven-clj
+;; juxt/dirwatch
+;; lambdaisland/deep-diff2
+;; lambdaisland/facai
+;; lambdaisland/kaocha
+;; lambdaisland/uri
+;; lilactown/cascade
+;; lilactown/pyramid
+;; liquidz/build.edn
+;; liquidz/clj-jwt
+;; magnars/prone
+;; metosin/porsas
+;; pangloss/genera
+;; pangloss/pattern
+;; pedestal/pedestal
+;; plumatic/hiphip
+;; plumatic/plumbing
+;; raynes/fs
+;; sattvik/leinjacker
+;; scgilardi/slingshot
+;; taoensso/faraday
+;; technomancy/robert-hooke
+;; technomancy/slamhound
+;; wkf/hawk
+;; yogthos/json-html
+;; yogthos/migratus
+;; ztellman/cambrian-collections
+;; ztellman/clj-tuple
+;; ztellman/narrator
+;; ztellman/penumbra
+;; ztellman/vertigo

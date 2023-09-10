@@ -434,9 +434,7 @@
     :git/sha "f3300d3d71d35534acf7cc6f010e3fa503be0fba"}
    {:name 'clojurewerkz/balagan
     :definition :lein
-    :setup "lein do clean, cljx once"
     :test-cmd "test"
-    :skip true ;; cljx doesn't work with recent clojure versions
     :git/url "https://github.com/clojurewerkz/balagan.git"
     :git/sha "22ac86d676ed2b85aac723c0fa262fb0c5ec5ec7"}
    {:name 'clojurewerkz/buffy
@@ -560,11 +558,13 @@
    {:name 'cognitect-labs/aws-api
     :definition :deps.edn
     :test-cmd "-M:dev:test"
+    :skip true ;; broken test: https://github.com/cognitect-labs/aws-api/issues/242
     :git/url "https://github.com/cognitect-labs/aws-api.git"
     :git/tag "v0.8.686"}
    {:name 'cognitect-labs/fern
     :definition :lein
     :test-cmd "test"
+    :skip true ;; broken test: https://github.com/cognitect-labs/fern/issues/9
     :git/url "https://github.com/cognitect-labs/fern.git"
     :git/tag "0.1.6"}
    {:name 'cognitect-labs/test-runner
@@ -611,6 +611,7 @@
    {:name 'davidsantiago/stencil
     :definition :lein
     :test-cmd "test"
+    :skip true ;; broken tests?
     :git/url "https://github.com/davidsantiago/stencil.git"
     :git/tag "0.5.0"}
    {:name 'de.kotka/lazymap
@@ -639,14 +640,10 @@
     :test-cmd "test"
     :git/url "https://github.com/Engelberg/instaparse.git"
     :git/tag "v1.4.12"}
-   {:name 'frenchy64/fixture-only
-    :definition :lein
-    :test-cmd "test"
-    :git/url "https://github.com/frenchy64/fixture-only.git"
-    :git/sha "a0815840c17e112f29ae8a77996aea64415ca8a5"}
    {:name 'frenchy64/fully-satisfies
     :definition :lein
     :test-cmd "test"
+    :skip true ;; 1.11.1 broke tests
     :git/url "https://github.com/frenchy64/fully-satisfies.git"
     :git/sha "aa0a873e67dd34078a2c58e638d7c5c73e1cd224"}
    {:name 'frenchy64/typedclojure
@@ -666,6 +663,8 @@
     :git/tag "1.11.423"}
    {:name 'funcool/buddy-hashers
     :definition :deps.edn
+    :setup ["sed -i -e 's/:javac-opts \\[.*\\]//g' build.clj"
+            "clojure -T:build compile"]
     :test-cmd "-X:dev:test"
     :git/url "https://github.com/funcool/buddy-hashers.git"
     :git/tag "2.0.167"}
@@ -701,7 +700,7 @@
     :git/sha "dee223c57456fa1afd600f447114622fa333efd3"}
    {:name 'greglook/alphabase
     :definition :lein
-    :test-cmd "kaocha"
+    :test-cmd "kaocha :unit-clj"
     :git/url "https://github.com/greglook/alphabase.git"
     :git/tag "2.1.1"}
    {:name 'greglook/blocks
@@ -1791,18 +1790,17 @@
 (comment
   (-main "--no-build" "--library" "clj-commons/seesaw"))
 
-;; Full run: 40 min
+;; Full run:
+;; real 537m16.090s
+;; user 152m8.895s
+;; sys  458m27.996s
 
 ;; current failures (not skipped):
 ;;
 ;; cognitect-labs/aws-api
 ;; cognitect-labs/fern
-;; davidsantiago/pathetic
 ;; davidsantiago/stencil
-;; frenchy64/fixture-only
 ;; frenchy64/fully-satisfies
-;; funcool/buddy-hashers
-;; greglook/alphabase
 ;; greglook/clj-arrangement
 ;; greglook/merkledag-core
 ;; hcarvalhoalves/raven-clj

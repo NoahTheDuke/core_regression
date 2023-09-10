@@ -557,6 +557,26 @@
     :test-cmd "-M:dev-mac-m1:test" ;; personal machine specific...
     :git/url "https://github.com/cnuernber/dtype-next.git"
     :git/sha "bc08804e07a084cbd21056892d20e9b7c85ab937"}
+   {:name 'cognitect-labs/aws-api
+    :definition :deps.edn
+    :test-cmd "-M:dev:test"
+    :git/url "https://github.com/cognitect-labs/aws-api.git"
+    :git/tag "v0.8.686"}
+   {:name 'cognitect-labs/fern
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/cognitect-labs/fern.git"
+    :git/tag "0.1.6"}
+   {:name 'cognitect-labs/test-runner
+    :definition :deps.edn
+    :test-cmd "-M:test"
+    :git/url "https://github.com/cognitect-labs/test-runner.git"
+    :git/sha "7284cda41fb9edc0f3bc6b6185cfb7138fc8a023"}
+   {:name 'cognitect-labs/vase
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/cognitect-labs/vase.git"
+    :git/sha "d882bc8f28e8af2077b55c80e069aa2238f646b7"}
    {:name 'dakrone/cd-client
     :definition :lein
     :test-cmd "test"
@@ -1025,6 +1045,37 @@
     :test-cmd "test"
     :git/url "https://github.com/nubank/state-flow.git"
     :git/tag "5.14.4"}
+   {:name 'pangloss/fermor
+    :definition :deps.edn
+    :test-cmd "-M:test"
+    :skip true ;; no test runner?
+    :git/url "https://github.com/pangloss/fermor.git"
+    :git/sha "0c5ea61360b82faf3fbd91b64051922587960f81"}
+   {:name 'pangloss/genera
+    :definition :deps.edn
+    :test-cmd "-M:test:runner"
+    :git/url "https://github.com/pangloss/genera.git"
+    :git/sha "71c577971b1d23404171555d87613c41ace6bf4a"}
+   {:name 'pangloss/pattern
+    :definition :deps.edn
+    :test-cmd "-M:test:runner"
+    :git/url "https://github.com/pangloss/pattern.git"
+    :git/sha "79cc57792fcb6b72d9ad9036ad29c7fca7e85ca3"}
+   {:name 'pangloss/pure-conditioning
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/pangloss/pure-conditioning.git"
+    :git/sha "61fa43215e0fce0fe83808b9e30c2bb4c170ffbd"}
+   {:name 'pangloss/system.check
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/pangloss/system.check.git"
+    :git/sha "61fa43215e0fce0fe83808b9e30c2bb4c170ffbd"}
+   {:name 'pangloss/transducers
+    :definition :lein
+    :test-cmd "test"
+    :git/url "https://github.com/pangloss/transducers.git"
+    :git/sha "08ea05da3893b439fd3b1f961ad1616ac95030c2"}
    {:name 'paraseba/faker
     :definition :lein
     :test-cmd "test"

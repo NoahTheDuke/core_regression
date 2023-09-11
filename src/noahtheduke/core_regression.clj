@@ -314,7 +314,7 @@
     :definition :lein
     :setup "lein javac"
     :test-cmd "run -m lazytest.main test"
-    :skip true ;; ns-form spec fails lol
+    :skip true ;; ns-form spec fails
     :git/url "https://github.com/clj-commons/seesaw.git"
     :git/sha "38695ea1a590d84d877a50df8792f58e04fcbd02"}
    {:name 'clj-commons/tentacles
@@ -423,7 +423,7 @@
    {:name 'clojure-lsp/clojure-lsp
     :definition :deps.edn
     :test-cmd "-M:test"
-    :test-dir "lib"
+    :dir "lib"
     :git/url "https://github.com/clojure-lsp/clojure-lsp.git"
     :git/tag "2023.08.06-00.28.06"}
    {:name 'clojurewerkz/archimedes
@@ -769,13 +769,13 @@
    {:name 'ibdknox/colorize
     :definition :lein
     :test-cmd "test"
-    :skip true ;; no tests have been written lol
+    :skip true ;; no tests
     :git/url "https://github.com/ibdknox/colorize.git"
     :git/sha "d89a13db5cc3e2c59cf397fab266f886f5ee9f7c"}
    {:name 'ibdknox/watchtower
     :definition :lein
     :test-cmd "test"
-    :skip true ;; no tests have been written lol
+    :skip true ;; no tests
     :git/url "https://github.com/ibdknox/watchtower.git"
     :git/sha "dbbfd612e1b626146628b0bda5572479da6994c4"}
    {:name 'igjoshua/americano
@@ -913,7 +913,7 @@
    {:name 'liquidz/antq
     :definition :deps.edn
     :test-cmd "-M:dev:test"
-    :skip true ;; requires gradle, i'm not setting that up lol
+    :skip true ;; requires gradle, i'm not setting that up
     :git/url "https://github.com/liquidz/antq.git"
     :git/tag "2.5.1109"}
    {:name 'liquidz/build.edn
@@ -941,6 +941,7 @@
    {:name 'magnars/prone
     :definition :lein
     :test-cmd "kaocha"
+    :skip true ;; broken assumptions in 1.10+: https://github.com/magnars/prone/issues/56
     :git/url "https://github.com/magnars/prone.git"
     :git/tag "2021-04-23"}
    {:name 'marick/midje
@@ -984,6 +985,7 @@
     :setup "docker-compose up -d"
     :test-cmd "test"
     :teardown "docker-compose down"
+    :skip true ;; "connection refused" errors on my machine
     :git/url "https://github.com/metosin/porsas.git"
     :git/sha "016256bd44e996d6b642c4c037b97ff4b885787f"}
    {:name 'metosin/potpuri
@@ -1080,11 +1082,13 @@
    {:name 'pangloss/genera
     :definition :deps.edn
     :test-cmd "-M:test:runner"
+    :skip true ;; no tests
     :git/url "https://github.com/pangloss/genera.git"
     :git/sha "71c577971b1d23404171555d87613c41ace6bf4a"}
    {:name 'pangloss/pattern
     :definition :deps.edn
     :test-cmd "-M:test:runner"
+    :skip true ;; test runner url is incorrect: https://github.com/pangloss/pattern/issues/23
     :git/url "https://github.com/pangloss/pattern.git"
     :git/sha "79cc57792fcb6b72d9ad9036ad29c7fca7e85ca3"}
    {:name 'pangloss/pure-conditioning
@@ -1114,7 +1118,7 @@
             {:deps.edn "-T:build compile-java :aliases '[:local :servlet-api]'"
              :dir "service"}]
     :test-cmd "-X:test"
-    :test-dir "tests"
+    :dir "tests"
     :git/url "https://github.com/pedestal/pedestal.git"
     :git/sha "9b02e4c4a9b87c718ed7f3f7bcdab032e84336a7"}
    {:name 'plumatic/hiphip
@@ -1357,7 +1361,7 @@
    {:name 'weavejester/cljfmt
     :definition :lein
     :test-cmd "test"
-    :test-dir "cljfmt"
+    :dir "cljfmt"
     :git/url "https://github.com/weavejester/cljfmt.git"
     :git/tag "0.11.2"}
    {:name 'weavejester/clout
@@ -1393,13 +1397,13 @@
    {:name 'weavejester/eftest
     :definition :lein
     :test-cmd "test"
-    :test-dir "eftest"
+    :dir "eftest"
     :git/url "https://github.com/weavejester/eftest.git"
     :git/tag "0.6.0"}
    {:name 'weavejester/environ
     :definition :lein
     :test-cmd "test"
-    :test-dir "environ"
+    :dir "environ"
     :git/url "https://github.com/weavejester/environ.git"
     :git/tag "1.2.0"}
    {:name 'weavejester/euclidean
@@ -1676,10 +1680,10 @@
               (let [dir (try (lib-dir lib)
                              (catch Throwable _
                                (println "Failed to clone" (:name lib))
-                               nil)) 
+                               nil))
                     dir (when dir
-                          (if (:test-dir lib)
-                            (io/file dir (:test-dir lib))
+                          (if (:dir lib)
+                            (io/file dir (:dir lib))
                             dir))]
                 (when dir
                   (when (= :lein (:definition lib))
@@ -1804,22 +1808,6 @@
 
 ;; current failures (not skipped):
 ;;
-;; cognitect-labs/aws-api
-;; cognitect-labs/fern
-;; davidsantiago/stencil
-;; frenchy64/fully-satisfies
-;; greglook/clj-arrangement
-;; greglook/merkledag-core
-;; hcarvalhoalves/raven-clj
-;; juxt/dirwatch
-;; lambdaisland/deep-diff2
-;; lambdaisland/facai
-;; lambdaisland/kaocha
-;; lambdaisland/uri
-;; lilactown/cascade
-;; lilactown/pyramid
-;; liquidz/build.edn
-;; liquidz/clj-jwt
 ;; magnars/prone
 ;; metosin/porsas
 ;; pangloss/genera

@@ -474,7 +474,7 @@
    {:name 'clojurewerkz/meltdown
     :definition :lein
     :setup ["sed -i -e 's/1.1.6.BUILD-SNAPSHOT/1.1.6.RELEASE/g' project.clj"
-            "sed -i -e 's/:javac-options \\[.*\\]//g' project.clj"
+            "sed -i -e 's/:javac-options/#_#_:javac-options/g' project.clj"
             "sed -i -e 's/\"-XX:+UseFastAccessorMethods\"//g' project.clj"]
     :test-cmd "test"
     :git/url "https://github.com/clojurewerkz/meltdown.git"
@@ -663,7 +663,7 @@
     :git/tag "1.11.423"}
    {:name 'funcool/buddy-hashers
     :definition :deps.edn
-    :setup ["sed -i -e 's/:javac-opts \\[.*\\]//g' build.clj"
+    :setup ["sed -i -e 's/:javac-opts/#_#_:javac-options/g' build.clj"
             "clojure -T:build compile"]
     :test-cmd "-X:dev:test"
     :git/url "https://github.com/funcool/buddy-hashers.git"
@@ -1115,6 +1115,7 @@
     :definition :deps.edn
     :setup [{:deps.edn "-X:deps:local prep"
              :dir "service"}
+            "sed -i -e 's/:javac-options/#_#_:javac-options/g' service/build.clj"
             {:deps.edn "-T:build compile-java :aliases '[:local :servlet-api]'"
              :dir "service"}]
     :test-cmd "-X:test"
@@ -1526,13 +1527,13 @@
    {:name 'ztellman/clj-radix
     :definition :lein
     :test-cmd "test"
-    :setup "sed -i -e 's/:javac-options \\[.*\\]//g' project.clj"
+    :setup "sed -i -e 's/:javac-options/#_#_:javac-options/g' project.clj"
     :git/url "https://github.com/ztellman/clj-radix.git"
     :git/tag "0.1.0"}
    {:name 'ztellman/clj-tuple
     :definition :lein
     :test-cmd "test"
-    :setup "sed -i -e 's/:javac-options \\[.*\\]//g' project.clj"
+    :setup "sed -i -e 's/:javac-options/#_#_:javac-options/g' project.clj"
     :git/url "https://github.com/ztellman/clj-tuple.git"
     :git/tag "0.2.2"}
    {:name 'ztellman/collections-check
@@ -1543,13 +1544,13 @@
    {:name 'ztellman/narrator
     :definition :lein
     :test-cmd "test"
-    :setup "sed -i -e 's/:javac-options \\[.*\\]//g' project.clj"
+    :setup "sed -i -e 's/:javac-options/#_#_:javac-options/g' project.clj"
     :git/url "https://github.com/ztellman/narrator.git"
     :git/tag "0.1.2"}
    {:name 'ztellman/proteus
     :definition :lein
     :test-cmd "test"
-    :setup "sed -i -e 's/:javac-options \\[.*\\]//g' project.clj"
+    :setup "sed -i -e 's/:javac-options/#_#_:javac-options/g' project.clj"
     :git/url "https://github.com/ztellman/proteus.git"
     :git/tag "0.1.6"}
    {:name 'ztellman/penumbra
@@ -1560,7 +1561,7 @@
    {:name 'ztellman/riddley
     :definition :lein
     :test-cmd "test"
-    :setup "sed -i -e 's/:javac-options \\[.*\\]//g' project.clj"
+    :setup "sed -i -e 's/:javac-options/#_#_:javac-options/g' project.clj"
     :git/url "https://github.com/ztellman/riddley.git"
     :git/tag "0.2.0"}
    {:name 'ztellman/sleight
@@ -1648,7 +1649,7 @@
       (str/replace "http://" "https://")
       (->> (spit (io/file dir "project.clj")))))
 
-(defn lib-dir [lib]
+(defn clone-lib [lib]
   (binding [*out* (java.io.StringWriter.)]
     (gl/procure (:git/url lib)
                 (:name lib)
@@ -1677,20 +1678,20 @@
         (if (:skip lib)
           (println "Skipping" (:name lib))
           (do (println "Testing" (:name lib))
-              (let [dir (try (lib-dir lib)
-                             (catch Throwable _
-                               (println "Failed to clone" (:name lib))
-                               nil))
-                    dir (when dir
-                          (if (:dir lib)
-                            (io/file dir (:dir lib))
-                            dir))]
-                (when dir
+              (let [lib-dir (try (clone-lib lib)
+                                 (catch Throwable _
+                                   (println "Failed to clone" (:name lib))
+                                   nil))
+                    test-dir (when lib-dir
+                               (if (:dir lib)
+                                 (io/file lib-dir (:dir lib))
+                                 lib-dir))]
+                (when test-dir
                   (when (= :lein (:definition lib))
-                    (copy-profiles dir profile)
-                    (remove-pedantic dir))
+                    (copy-profiles test-dir profile)
+                    (remove-pedantic test-dir))
                   (let [lib (assoc lib :version version)
-                        shell-opts (merge {:dir dir :continue true}
+                        shell-opts (merge {:dir test-dir :continue true}
                                           (when-not (:test-out options)
                                             {:out :string
                                              :err :string}))
@@ -1703,7 +1704,8 @@
                             :let [cmd
                                   (cond
                                     (string? setup-cmd) setup-cmd
-                                    (and (map? setup-cmd) (:deps.edn setup-cmd))
+                                    (and (map? setup-cmd)
+                                         (:deps.edn setup-cmd))
                                     (test-cmd {:version version
                                                :definition :deps.edn
                                                :test-cmd (:deps.edn setup-cmd)})
@@ -1714,7 +1716,7 @@
                           (let [shell-opts
                                 (if (and (map? setup-cmd)
                                          (:dir setup-cmd))
-                                  (update shell-opts :dir io/file (:dir setup-cmd))
+                                  (assoc shell-opts :dir (io/file lib-dir (:dir setup-cmd)))
                                   shell-opts)]
                             (shell shell-opts cmd))
                           (catch Throwable _

@@ -611,7 +611,7 @@
    {:name 'davidsantiago/stencil
     :definition :lein
     :test-cmd "test"
-    :skip true ;; broken tests?
+    :skip true ;; pulls moustache's specs and runs them without specifying a hash lol
     :git/url "https://github.com/davidsantiago/stencil.git"
     :git/tag "0.5.0"}
    {:name 'de.kotka/lazymap
@@ -710,7 +710,7 @@
     :git/tag "2.0.4"}
    {:name 'greglook/clj-arrangement
     :definition :lein
-    :test-cmd "kaocha"
+    :test-cmd "kaocha :unit-clj"
     :git/url "https://github.com/greglook/clj-arrangement.git"
     :git/tag "2.1.0"}
    {:name 'greglook/clj-cbor
@@ -736,8 +736,9 @@
    {:name 'greglook/merkledag-core
     :definition :lein
     :test-cmd "test"
+    :skip true ;; interop requires missing type hint
     :git/url "https://github.com/greglook/merkledag-core.git"
-    :git/sha "df8a5ce5bb25d3af23dc4b46f652f44b3d4975f4"}
+    :git/tag "0.4.1"}
    {:name 'greglook/puget
     :definition :lein
     :test-cmd "test"
@@ -746,6 +747,7 @@
    {:name 'hcarvalhoalves/raven-clj
     :definition :lein
     :test-cmd "midje"
+    :skip true ;; 1.9 spec fails (symbol instead of keyword in ns form)
     :git/url "https://github.com/hcarvalhoalves/raven-clj.git"
     :git/sha "2f9914d8629d878ca12a33a469edef346c21d42d"}
    {:name 'hiredman/clj-http-lite
@@ -761,7 +763,7 @@
    {:name 'http-kit/http-kit
     :definition :lein
     :test-cmd "test"
-    :skip true ;; 1.9 spec fails
+    :skip true ;; 1.9 spec fails (symbol instead of keyword in ns form)
     :git/url "https://github.com/http-kit/http-kit.git"
     :git/tag "v2.7.0"}
    {:name 'ibdknox/colorize
@@ -811,6 +813,7 @@
    {:name 'juxt/dirwatch
     :definition :lein
     :test-cmd "test"
+    :skip true ;; `lein test` reports "Error: Could not find or load main class clojure.main"
     :git/url "https://github.com/juxt/dirwatch.git"
     :git/tag "0.2.6"}
    {:name 'juxt/iota
@@ -866,19 +869,21 @@
     :git/tag "v0.0-47"}
    {:name 'lambdaisland/deep-diff2
     :definition :deps.edn
-    :test-cmd "-M:test -m kaocha.runner"
+    :test-cmd "-M:test -m kaocha.runner :clj"
     :git/url "https://github.com/lambdaisland/deep-diff2.git"
     :git/tag "v2.9.202"}
    {:name 'lambdaisland/facai
     :definition :deps.edn
-    :test-cmd "-M:test -m kaocha.runner"
+    :test-cmd "-M:dev:test -m kaocha.runner"
+    :skip true ;; has notifier plugin that requires notify-send
     :git/url "https://github.com/lambdaisland/facai.git"
     :git/tag "v0.8.68-alpha"}
    {:name 'lambdaisland/kaocha
     :definition :deps.edn
-    :test-cmd "-M:test -m kaocha.runner"
+    :test-cmd "-M:test -m kaocha.runner :unit"
     :git/url "https://github.com/lambdaisland/kaocha.git"
-    :git/tag "v1.86.1355"}
+    ;; needs to be sha instead of tag? i don't get it
+    :git/sha "df39ac3f98807b1aa92ace7794dd25a6128b950b"}
    {:name 'lambdaisland/ornament
     :definition :deps.edn
     :setup "npm install ws"
@@ -892,17 +897,17 @@
     :git/sha "d1b847098284130fb0ff3ed786ade8cf83dfa399"}
    {:name 'lambdaisland/uri
     :definition :deps.edn
-    :test-cmd "-M:test -m kaocha.runner"
+    :test-cmd "-M:test -m kaocha.runner :clj"
     :git/url "https://github.com/lambdaisland/uri.git"
     :git/tag "v1.15.125"}
    {:name 'lilactown/cascade
     :definition :deps.edn
-    :test-cmd "-M:test -m kaocha.runner"
+    :test-cmd "-M:test -m kaocha.runner :clj"
     :git/url "https://github.com/lilactown/cascade.git"
     :git/tag "v2.0.1"}
    {:name 'lilactown/pyramid
     :definition :deps.edn
-    :test-cmd "-M:test -m kaocha.runner"
+    :test-cmd "-M:test -m kaocha.runner :clj"
     :git/url "https://github.com/lilactown/pyramid.git"
     :git/tag "3.3.0"}
    {:name 'liquidz/antq
@@ -914,11 +919,13 @@
    {:name 'liquidz/build.edn
     :definition :deps.edn
     :test-cmd "-M:dev:test"
+    :skip true ;; requires actually shelling out to get the tests to run
     :git/url "https://github.com/liquidz/build.edn.git"
     :git/tag "0.10.227"}
    {:name 'liquidz/clj-jwt
     :definition :lein
     :test-cmd "midje"
+    :skip true ;; interop requires missing type hint
     :git/url "https://github.com/liquidz/clj-jwt.git"
     :git/sha "8d4778a20a243ad6e0a8deae6500877c6c9de09f"}
    {:name 'liquidz/rewrite-indented

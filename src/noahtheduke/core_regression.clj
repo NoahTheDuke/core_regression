@@ -551,7 +551,8 @@
    {:name 'cnuerber/dtype-next
     :definition :deps.edn
     :setup ["rm -rf target/classes"
-            {:deps.edn "-T:build compile"}]
+            {:definition :deps.edn
+             :test-cmd "-T:build compile"}]
     :test-cmd "-M:dev-mac-m1:test" ;; personal machine specific...
     :git/url "https://github.com/cnuernber/dtype-next.git"
     :git/sha "bc08804e07a084cbd21056892d20e9b7c85ab937"}
@@ -785,7 +786,8 @@
     :git/tag "v1.2.0"}
    {:name 'igjoshua/farolero
     :definition :deps.edn
-    :setup {:deps.edn "-X:build"}
+    :setup {:definition :deps.edn
+            :test-cmd "-X:build"}
     :test-cmd "-M:dev:test:runner"
     :git/url "https://github.com/IGJoshua/farolero.git"
     :git/tag "v1.5.0"}
@@ -1113,10 +1115,12 @@
     :git/sha "514c1f5b3169cbb88b0eba5dd8c85ac049055ab8"}
    {:name 'pedestal/pedestal
     :definition :deps.edn
-    :setup [{:deps.edn "-X:deps:local prep"
+    :setup [{:definition :deps.edn
+             :test-cmd "-X:deps:local prep"
              :dir "service"}
             "sed -i -e 's/:javac-options/#_#_:javac-options/g' service/build.clj"
-            {:deps.edn "-T:build compile-java :aliases '[:local :servlet-api]'"
+            {:definition :deps.edn
+             :test-cmd "-T:build compile-java :aliases '[:local :servlet-api]'"
              :dir "service"}]
     :test-cmd "-X:test"
     :dir "tests"
@@ -1704,11 +1708,8 @@
                             :let [cmd
                                   (cond
                                     (string? setup-cmd) setup-cmd
-                                    (and (map? setup-cmd)
-                                         (:deps.edn setup-cmd))
-                                    (test-cmd {:version version
-                                               :definition :deps.edn
-                                               :test-cmd (:deps.edn setup-cmd)})
+                                    (map? setup-cmd)
+                                    (test-cmd (assoc setup-cmd :version version))
                                     :else nil)]]
                       (if cmd
                         (try

@@ -314,7 +314,7 @@
     :definition :lein
     :setup "lein javac"
     :test-cmd "run -m lazytest.main test"
-    :skip true ;; ns-form spec fails
+    :skip true ;; 1.9 spec fails (symbol instead of keyword in ns form)
     :git/url "https://github.com/clj-commons/seesaw.git"
     :git/sha "38695ea1a590d84d877a50df8792f58e04fcbd02"}
    {:name 'clj-commons/tentacles
@@ -794,6 +794,7 @@
    {:name 'juji-io/datalevin
     :definition :lein
     :test-cmd "test"
+    :skip true ;; test suite takes 6.7 hours lol
     :git/url "https://github.com/juji-io/datalevin.git"
     :git/tag "0.8.19"}
    {:name 'juxt/aero
@@ -1129,6 +1130,7 @@
    {:name 'plumatic/hiphip
     :definition :lein
     :test-cmd "test"
+    :skip true ;; 1.9 spec fails (symbol instead of keyword in ns form)
     :git/url "https://github.com/plumatic/hiphip.git"
     :git/tag "57d8d4130b50985a1ea24dff1df7d715e80447a5"}
    {:name 'plumatic/plumbing
@@ -1159,6 +1161,7 @@
    {:name 'raynes/fs
     :definition :lein
     :test-cmd "test"
+    :skip true ;; interop requires missing type hint
     :git/url "https://github.com/Raynes/fs.git"
     :git/tag "147f7b30d2c3c7e773a3650bf16a7b5720acfde8"}
    {:name 'redplanetlabs/defexception
@@ -1224,11 +1227,13 @@
    {:name 'sattvik/leinjacker
     :definition :lein
     :test-cmd "test"
+    :skip true ;; nterop requires missing type hint
     :git/url "https://github.com/sattvik/leinjacker.git"
     :git/tag "0.4.3"}
    {:name 'scgilardi/slingshot
     :definition :lein
     :test-cmd "test"
+    :skip true ;; broken assumptions in 1.8.0+: https://github.com/scgilardi/slingshot/issues/58
     :git/url "https://github.com/scgilardi/slingshot.git"
     :git/tag "0.12.2"}
    {:name 'seancorfield/honeysql
@@ -1265,6 +1270,7 @@
    {:name 'taoensso/faraday
     :definition :lein
     :test-cmd "test"
+    :skip true ;; requires testcontainers to be installed
     :git/url "https://github.com/taoensso/faraday.git"
     :git/tag "v1.12.0"}
    {:name 'taoensso/nippy
@@ -1310,11 +1316,13 @@
    {:name 'technomancy/robert-hooke
     :definition :lein
     :test-cmd "test"
+    :skip true ;; broken under 1.7.0+
     :git/url "https://github.com/technomancy/robert-hooke.git"
     :git/tag "1.3.0"}
    {:name 'technomancy/slamhound
     :definition :lein
     :test-cmd "test"
+    :skip true ;; broken tests, no longer maintained
     :git/url "https://github.com/technomancy/slamhound.git"
     :git/sha "68bad50282b8b559eb012d6574ef6a0e1485b3a2"}
    {:name 'tobereplaced/lettercase
@@ -1475,6 +1483,7 @@
    {:name 'wkf/hawk
     :definition :lein
     :test-cmd "test"
+    :skip true ;; 1.9 spec fails (symbol instead of keyword in ns form)
     :git/url "https://github.com/wkf/hawk.git"
     :git/sha "a5c21e1305dbae8b8511090cc017faf99ada3b04"}
    {:name 'xsc/pandect
@@ -1495,6 +1504,7 @@
    {:name 'yogthos/json-html
     :definition :lein
     :test-cmd "test-clj"
+    :skip true ;; broken test
     :git/url "https://github.com/yogthos/json-html.git"
     :git/sha "53f84f1f00498d04d69b26a760c4fe673b08642e"}
    {:name 'yogthos/maestro
@@ -1510,6 +1520,7 @@
    {:name 'yogthos/migratus
     :definition :deps.edn
     :test-cmd "-J-Dclojure.main.report=stderr -Sforce -M:test-runner:dev"
+    :skip true ;; requires testcontainers to be installed
     :git/url "https://github.com/yogthos/migratus.git"
     :git/sha "b61f9bcbce7acd2156a0adffbd9946f9702a4acd"}
    ;; any later commit requires java 19+. should I disable this?
@@ -1526,6 +1537,7 @@
    {:name 'ztellman/cambrian-collections
     :definition :lein
     :test-cmd "test"
+    :skip true ;; relies on collection-check, which is broken
     :git/url "https://github.com/ztellman/cambrian-collections.git"
     :git/sha "35c80f0afde9f5bf33e63f93c859d4baa9981f4c"}
    {:name 'ztellman/clj-radix
@@ -1538,17 +1550,20 @@
     :definition :lein
     :test-cmd "test"
     :setup "sed -i -e 's/:javac-options/#_#_:javac-options/g' project.clj"
+    :skip true ;; relies on collection-check, which is broken
     :git/url "https://github.com/ztellman/clj-tuple.git"
     :git/tag "0.2.2"}
    {:name 'ztellman/collections-check
     :definition :lein
     :test-cmd "test"
+    :skip true ;; impl details changed and now hashes don't match anymore
     :git/url "https://github.com/ztellman/collections-check.git"
     :git/tag "0.1.7"}
    {:name 'ztellman/narrator
     :definition :lein
     :test-cmd "test"
     :setup "sed -i -e 's/:javac-options/#_#_:javac-options/g' project.clj"
+    :skip true ;; 1.9 spec fails (symbol instead of keyword in ns form)
     :git/url "https://github.com/ztellman/narrator.git"
     :git/tag "0.1.2"}
    {:name 'ztellman/proteus
@@ -1560,6 +1575,7 @@
    {:name 'ztellman/penumbra
     :definition :lein
     :test-cmd "test"
+    :skip true ;; 1.9 spec fails (symbol instead of keyword in ns form)
     :git/url "https://github.com/ztellman/penumbra.git"
     :git/sha "db43d01c280305beab26d1004ae78b1777ab3fc7"}
    {:name 'ztellman/riddley
@@ -1576,6 +1592,7 @@
    {:name 'ztellman/vertigo
     :definition :lein
     :test-cmd "test"
+    :skip true ;; broken assumptions in 1.10+
     :git/url "https://github.com/ztellman/vertigo.git"
     :git/tag "0.1.4"}
    {:name 'ztellman/virgil
@@ -1675,75 +1692,86 @@
                       identity))
         results (atom {:failure [] :success []})]
     (install-clojure path version jar)
-    (time
-      (doseq [lib (all-libraries)
-              :when (filter-fn lib)]
-        (newline)
-        (if (:skip lib)
-          (println "Skipping" (:name lib))
-          (do (println "Testing" (:name lib))
-              (let [lib-dir (try (clone-lib lib)
-                                 (catch Throwable _
-                                   (println "Failed to clone" (:name lib))
-                                   nil))
-                    test-dir (when lib-dir
-                               (if (:dir lib)
-                                 (io/file lib-dir (:dir lib))
-                                 lib-dir))]
-                (when test-dir
-                  (when (= :lein (:definition lib))
-                    (copy-profiles test-dir profile)
-                    (remove-pedantic test-dir))
-                  (let [lib (assoc lib :version version)
-                        shell-opts (merge {:dir test-dir :continue true}
-                                          (when-not (:test-out options)
-                                            {:out :string
-                                             :err :string}))
-                        setup (:setup lib)
-                        setup (cond (vector? setup) setup
-                                    (map? setup) [setup]
-                                    (string? setup) [setup])
-                        cmd (test-cmd lib)]
-                    (doseq [setup-cmd setup
-                            :let [cmd
-                                  (cond
-                                    (string? setup-cmd) setup-cmd
-                                    (map? setup-cmd)
-                                    (test-cmd (assoc setup-cmd :version version))
-                                    :else nil)]]
-                      (if cmd
-                        (try
-                          (println "Running setup command:" cmd)
-                          (let [shell-opts
-                                (if (and (map? setup-cmd)
-                                         (:dir setup-cmd))
-                                  (assoc shell-opts :dir (io/file lib-dir (:dir setup-cmd)))
-                                  shell-opts)]
-                            (shell shell-opts cmd))
-                          (catch Throwable _
-                            (println "Setup command failed")))
-                        (println "Setup command nil:" setup)))
-                    (try
-                      (println "Running test command:" cmd)
-                      (let [test-result (shell shell-opts cmd)
-                            k (if (zero? (:exit test-result)) :success :failure)]
-                        (swap! results update k conj (:name lib))
-                        (when (= k :failure)
-                          (println (str (:name lib) " tests did not pass"))))
-                      (catch Throwable e
-                        (prn e)
-                        (swap! results update :failure conj (:name lib))))
-                    (let [teardown (:teardown lib)
-                          teardown (if (string? teardown) [teardown] teardown)]
-                      (doseq [td teardown]
-                        (try
-                          (println "Running teardown command:" td)
-                          (shell shell-opts td)
-                          (catch Throwable _
-                            (println (format "Teardown '%s' failed" td)))))))))))))
+    (doseq [lib (all-libraries)
+            :when (filter-fn lib)]
+      (newline)
+      (if (:skip lib)
+        (println "Skipping" (:name lib))
+        (do (println "Testing" (:name lib))
+            (let [lib-dir (try (clone-lib lib)
+                               (catch Throwable _
+                                 (println "Failed to clone" (:name lib))
+                                 nil))
+                  test-dir (when lib-dir
+                             (if (:dir lib)
+                               (io/file lib-dir (:dir lib))
+                               lib-dir))]
+              (when test-dir
+                (when (= :lein (:definition lib))
+                  (copy-profiles test-dir profile)
+                  (remove-pedantic test-dir))
+                (let [lib (assoc lib :version version)
+                      shell-opts (merge {:dir test-dir :continue true}
+                                        (when-not (:test-out options)
+                                          {:out :string
+                                           :err :string}))
+                      setup (:setup lib)
+                      setup (cond (vector? setup) setup
+                                  (map? setup) [setup]
+                                  (string? setup) [setup])
+                      cmd (test-cmd lib)
+                      start-time (System/nanoTime)]
+                  (doseq [setup-cmd setup
+                          :let [cmd
+                                (cond
+                                  (string? setup-cmd) setup-cmd
+                                  (map? setup-cmd)
+                                  (test-cmd (assoc setup-cmd :version version))
+                                  :else nil)]]
+                    (if cmd
+                      (try
+                        (println "Running setup command:" cmd)
+                        (let [shell-opts
+                              (if (and (map? setup-cmd)
+                                       (:dir setup-cmd))
+                                (assoc shell-opts :dir (io/file lib-dir (:dir setup-cmd)))
+                                shell-opts)]
+                          (shell shell-opts cmd))
+                        (catch Throwable _
+                          (println "Setup command failed")))
+                      (println "Setup command nil:" setup)))
+                  (try
+                    (println "Running test command:" cmd)
+                    (let [test-result (shell shell-opts cmd)
+                          duration (/ (double (- (. System (nanoTime)) start-time))
+                                      1000000.0)
+                          k (if (zero? (:exit test-result)) :success :failure)]
+                      (swap! results update k conj {:name (:name lib)
+                                                    :duration duration})
+                      (when (= k :failure)
+                        (println (str (:name lib) " tests did not pass"))))
+                    (catch Throwable e
+                      (prn e)
+                      (let [duration (/ (double (- (. System (nanoTime)) start-time))
+                                        1000000.0)]
+                        (swap! results update :failure conj {:name (:name lib)
+                                                             :duration duration}))))
+                  (let [teardown (:teardown lib)
+                        teardown (if (string? teardown) [teardown] teardown)]
+                    (doseq [td teardown]
+                      (try
+                        (println "Running teardown command:" td)
+                        (shell shell-opts td)
+                        (catch Throwable _
+                          (println (format "Teardown '%s' failed" td))))))))))))
     (newline)
     (when-let [failures (seq (:failure @results))]
-      (pprint/pprint failures))))
+      (println "Failures:")
+      (pprint/pprint failures))
+    (newline)
+    (println "Longest test suites:")
+    (pprint/pprint (take 5 (sort-by :duration > (concat (:success @results)
+                                                        (:failure @results)))))))
 
 (def cli-options
   [[nil "--[no-]build" "Recompile and install clojure snapshot jar"
@@ -1801,9 +1829,6 @@
       (exit (if ok? 0 1) exit-message)
       (run-impl opts))))
 
-(comment
-  (-main "--no-build" "--library" "clj-commons/seesaw"))
-
 ;; Full run:
 ;; real 537m16.090s
 ;; user 152m8.895s
@@ -1811,24 +1836,4 @@
 
 ;; current failures (not skipped):
 ;;
-;; magnars/prone
-;; metosin/porsas
-;; pangloss/genera
-;; pangloss/pattern
-;; pedestal/pedestal
-;; plumatic/hiphip
-;; plumatic/plumbing
-;; raynes/fs
-;; sattvik/leinjacker
-;; scgilardi/slingshot
-;; taoensso/faraday
-;; technomancy/robert-hooke
-;; technomancy/slamhound
-;; wkf/hawk
-;; yogthos/json-html
-;; yogthos/migratus
-;; ztellman/cambrian-collections
-;; ztellman/clj-tuple
-;; ztellman/narrator
-;; ztellman/penumbra
-;; ztellman/vertigo
+;; N/A

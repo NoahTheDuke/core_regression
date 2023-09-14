@@ -7,7 +7,9 @@
     [clojure.data.xml :as xml]
     [clojure.string :as str]
     [clojure.tools.cli :as cli]
-    [clojure.pprint :as pprint]))
+    [clojure.pprint :as pprint]) 
+  (:import
+    [java.util.concurrent Executors Future]))
 
 (def clojure-libraries
   [
@@ -1641,24 +1643,25 @@
        :content
        first))
 
-(defn compile-clojure [options path]
-  (let [path (or path
+(defn install-clojure [path version jar]
+  (let [m2 (io/file (System/getProperty "user.home") ".m2" "repository" "org" "clojure" "clojure" version)]
+    (io/make-parents (io/file m2 jar))
+    (io/copy (io/file path)
+             (io/file m2 jar))))
+
+(defn compile-clojure [options]
+  (let [path (or (io/file ".." "clojure-local-dev" (:branch options))
                  (gl/procure "https://github.com/clojure/clojure.git"
                              'org.clojure/clojure
                              "1.11.1"))
         version (get-version-from-pom (io/file path "pom.xml"))
         jar (format "clojure-%s.jar" version)]
     (when (:build options)
-      (shell {:dir path} "mvn" "-ntp" "-q" "-Dmaven.test.skip=true" "clean" "package"))
+      (shell {:dir path} "mvn" "-ntp" "-q" "-Dmaven.test.skip=true" "clean" "package")
+      (install-clojure path version jar))
     {:version version
      :jar jar
      :path (str path "/target/" jar)}))
-
-(defn install-clojure [path version jar]
-  (let [m2 (io/file (System/getProperty "user.home") ".m2" "repository" "org" "clojure" "clojure" version)]
-    (io/make-parents (io/file m2 jar))
-    (io/copy (io/file path)
-             (io/file m2 jar))))
 
 (defn copy-profiles [dir profile]
   (spit (io/file dir "profiles.clj") profile))
@@ -1675,103 +1678,138 @@
     (gl/procure (:git/url lib)
                 (:name lib)
                 (or (:git/tag lib) (:git/sha lib)))))
+(defn pmap*
+  "Efficient version of pmap which avoids the overhead of lazy-seq.
+
+  (def coll (range 1000))
+  (doall (pmap (fn [_] (Thread/sleep 100)) coll)) => 3.34 secs
+  (pmap* (fn [_] (Thread/sleep 100)) coll) => 202 ms"
+  [f coll]
+  (let [executor (Executors/newCachedThreadPool)
+        futures (mapv #(.submit executor (reify Callable (call [_] (f %)))) coll)
+        ret (mapv #(.get ^Future %) futures)]
+    (.shutdownNow executor)
+    ret))
+
+(defn make-lein-profile [version]
+  (-> (io/resource "profiles.clj")
+      slurp
+      (str/replace "CLOJURE_VERSION" version)))
+
+(defn make-filter-fn [options]
+  (if-let [libraries (not-empty (set (:library options)))]
+    #(libraries (:name %))
+    (if-let [chosen-ns (:namespace options)]
+      #(= chosen-ns (namespace (:name %)))
+      identity)))
+
+(defn sb-println [sb & strings]
+  (.append sb (str/join " " strings))
+  (.append sb \newline))
+
+(defn update-results [results m]
+  (swap! results assoc (:name m) m))
+
+(defn test-lib
+  [options profile version results {lib-name :name :keys [skip] :as lib}]
+  (if skip
+    (update-results results {:name lib-name
+                             :result :skip
+                             :duration 0
+                             :out (str "Skipping" lib-name)})
+    (let [sb (StringBuilder. (str "Testing " lib-name \newline))
+          lib-dir (try (clone-lib lib)
+                       (catch Throwable _
+                         (sb-println sb "Failed to clone" lib-name)
+                         nil))
+          test-dir (when lib-dir
+                     (if (:dir lib)
+                       (io/file lib-dir (:dir lib))
+                       lib-dir))]
+      (when test-dir
+        (when (= :lein (:definition lib))
+          (copy-profiles test-dir profile)
+          (remove-pedantic test-dir))
+        (let [lib (assoc lib :version version)
+              shell-opts (merge {:dir test-dir :continue true}
+                                (when-not (:test-out options)
+                                  {:out :string
+                                   :err :string}))
+              setup (:setup lib)
+              setup (cond (vector? setup) setup
+                          (map? setup) [setup]
+                          (string? setup) [setup])
+              cmd (test-cmd lib)
+              start-time (System/nanoTime)]
+          (doseq [setup-cmd setup
+                  :let [cmd
+                        (cond
+                          (string? setup-cmd) setup-cmd
+                          (map? setup-cmd)
+                          (test-cmd (assoc setup-cmd :version version))
+                          :else nil)]]
+            (if cmd
+              (try
+                (sb-println sb "Running setup command:" cmd)
+                (let [shell-opts
+                      (if (and (map? setup-cmd)
+                               (:dir setup-cmd))
+                        (assoc shell-opts :dir (io/file lib-dir (:dir setup-cmd)))
+                        shell-opts)]
+                  (shell shell-opts cmd))
+                (catch Throwable _
+                  (sb-println sb "Setup command failed")))
+              (sb-println sb "Setup command nil:" setup)))
+          (try
+            (sb-println sb "Running test command:" cmd)
+            (let [test-result (shell shell-opts cmd)
+                  duration (/ (double (- (. System (nanoTime)) start-time))
+                              1000000.0)
+                  result (if (zero? (:exit test-result))
+                           :success :failure)]
+              (when (:test-out options)
+                (sb-println sb (:out test-result)))
+              (when (= result :failure)
+                (sb-println sb lib-name "tests did not pass"))
+              (update-results results {:name lib-name
+                                       :result result
+                                       :duration duration}))
+            (catch Throwable e
+              (let [duration (/ (double (- (. System (nanoTime)) start-time))
+                                1000000.0)]
+                (sb-println sb e)
+                (update-results results {:name lib-name
+                                         :result :failure
+                                         :duration duration}))))
+          (let [teardown (:teardown lib)
+                teardown (if (string? teardown) [teardown] teardown)]
+            (doseq [td teardown]
+              (try
+                (sb-println sb "Running teardown command:" td)
+                (shell shell-opts td)
+                (catch Throwable _
+                  (sb-println sb (format "Teardown '%s' failed" td))))))
+          (swap! results assoc-in [lib-name :out] (str sb))
+          (println (str sb)))))))
 
 (defn run-impl [{:keys [options]}]
   (println (.toString (java.time.LocalDateTime/now)))
-  (let [branch (:branch options)
-        {:keys [path version jar]} (compile-clojure
-                                     options
-                                     (io/file ".." "clojure-local-dev" branch))
-        profile (-> (io/resource "profiles.clj")
-                    slurp
-                    (str/replace "CLOJURE_VERSION" version))
-        filter-fn (if-let [libraries (not-empty (set (:library options)))]
-                    #(libraries (:name %))
-                    (if-let [chosen-ns (:namespace options)]
-                      #(= chosen-ns (namespace (:name %)))
-                      identity))
-        results (atom {:failure [] :success []})]
-    (install-clojure path version jar)
-    (doseq [lib (all-libraries)
-            :when (filter-fn lib)]
+  (let [{:keys [version]} (compile-clojure options)
+        profile (make-lein-profile version)
+        filter-fn (make-filter-fn options)
+        results (atom {})
+        libs (filterv filter-fn (all-libraries))]
+    (pmap* #(test-lib options profile version results %) libs)
+    #_(doseq [lib libs]
+      (test-lib options profile version results lib))
+    (when-let [failures (seq (filter #(= :failure (:result %)) (vals @results)))]
       (newline)
-      (if (:skip lib)
-        (println "Skipping" (:name lib))
-        (do (println "Testing" (:name lib))
-            (let [lib-dir (try (clone-lib lib)
-                               (catch Throwable _
-                                 (println "Failed to clone" (:name lib))
-                                 nil))
-                  test-dir (when lib-dir
-                             (if (:dir lib)
-                               (io/file lib-dir (:dir lib))
-                               lib-dir))]
-              (when test-dir
-                (when (= :lein (:definition lib))
-                  (copy-profiles test-dir profile)
-                  (remove-pedantic test-dir))
-                (let [lib (assoc lib :version version)
-                      shell-opts (merge {:dir test-dir :continue true}
-                                        (when-not (:test-out options)
-                                          {:out :string
-                                           :err :string}))
-                      setup (:setup lib)
-                      setup (cond (vector? setup) setup
-                                  (map? setup) [setup]
-                                  (string? setup) [setup])
-                      cmd (test-cmd lib)
-                      start-time (System/nanoTime)]
-                  (doseq [setup-cmd setup
-                          :let [cmd
-                                (cond
-                                  (string? setup-cmd) setup-cmd
-                                  (map? setup-cmd)
-                                  (test-cmd (assoc setup-cmd :version version))
-                                  :else nil)]]
-                    (if cmd
-                      (try
-                        (println "Running setup command:" cmd)
-                        (let [shell-opts
-                              (if (and (map? setup-cmd)
-                                       (:dir setup-cmd))
-                                (assoc shell-opts :dir (io/file lib-dir (:dir setup-cmd)))
-                                shell-opts)]
-                          (shell shell-opts cmd))
-                        (catch Throwable _
-                          (println "Setup command failed")))
-                      (println "Setup command nil:" setup)))
-                  (try
-                    (println "Running test command:" cmd)
-                    (let [test-result (shell shell-opts cmd)
-                          duration (/ (double (- (. System (nanoTime)) start-time))
-                                      1000000.0)
-                          k (if (zero? (:exit test-result)) :success :failure)]
-                      (swap! results update k conj {:name (:name lib)
-                                                    :duration duration})
-                      (when (= k :failure)
-                        (println (str (:name lib) " tests did not pass"))))
-                    (catch Throwable e
-                      (prn e)
-                      (let [duration (/ (double (- (. System (nanoTime)) start-time))
-                                        1000000.0)]
-                        (swap! results update :failure conj {:name (:name lib)
-                                                             :duration duration}))))
-                  (let [teardown (:teardown lib)
-                        teardown (if (string? teardown) [teardown] teardown)]
-                    (doseq [td teardown]
-                      (try
-                        (println "Running teardown command:" td)
-                        (shell shell-opts td)
-                        (catch Throwable _
-                          (println (format "Teardown '%s' failed" td))))))))))))
-    (newline)
-    (when-let [failures (seq (:failure @results))]
       (println "Failures:")
-      (pprint/pprint failures))
+      (pprint/pprint (mapv (juxt :name :duration) failures)))
     (newline)
     (println "Longest test suites:")
-    (pprint/pprint (take 5 (sort-by :duration > (concat (:success @results)
-                                                        (:failure @results)))))))
+    (pprint/pprint (mapv (juxt :name :duration)
+                         (take 5 (sort-by :duration > (vals @results)))))))
 
 (def cli-options
   [[nil "--[no-]build" "Recompile and install clojure snapshot jar"
@@ -1827,7 +1865,8 @@
   (let [{:keys [exit-message ok?] :as opts} (validate-args args)]
     (if exit-message
       (exit (if ok? 0 1) exit-message)
-      (run-impl opts))))
+      (do (run-impl opts)
+          (System/exit 0)))))
 
 ;; Full run:
 ;; real 537m16.090s

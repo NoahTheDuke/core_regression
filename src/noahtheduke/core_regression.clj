@@ -304,7 +304,7 @@
     :git/tag "Release-1.0.1"}
    {:name 'clj-commons/rewrite-clj
     :definition :deps.edn
-    :test-cmd "-M:test-common:kaocha --reporter documentation"
+    :test-cmd "-M:test-common:kaocha"
     :git/url "https://github.com/clj-commons/rewrite-clj.git"
     :git/tag "v1.1.47"}
    {:name 'clj-commons/ring-buffer
@@ -1610,6 +1610,17 @@
                popular-libraries)))
 
 (comment
+  (let [grouped (reduce
+                  (fn [acc {:keys [definition test-cmd] :as lib
+                            :or {test-cmd "clean test"}}]
+                    (update-in acc [definition test-cmd] (fnil conj []) lib))
+                  {}
+                  (all-libraries))]
+    (prn :lein (count (filter #(= :lein (:definition %)) (all-libraries))))
+    (prn :deps.edn (count (filter #(= :deps.edn (:definition %)) (all-libraries))))
+    (clojure.pprint/pprint (into (sorted-map) (update-vals (:lein grouped) count)))
+    (clojure.pprint/pprint (into (sorted-map) (update-vals (:deps.edn grouped) count)))
+    )
   (count (all-libraries)))
 
 (defn test-cmd-impl [lib] (:definition lib))

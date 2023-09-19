@@ -50,6 +50,7 @@ with `clojure -M:run [opts]*`. Opts can be:
 * `-b`, `--branch`: clojure-local-dev branch to use. Defaults to `master`.
 * `-l`, `--library`: Specific libraries to check. (Can be given multiple times.)
 * `-n`, `--namespace`: Namespace of libraries to check.
+* `-p`, `--[no-]parallel`: Run the test suites in parallel.
 * `-h`, `--help`: The help string.
 
 `--build` will call `mvn -ntp -q -Dmaven.test.skip=true clean package`. The

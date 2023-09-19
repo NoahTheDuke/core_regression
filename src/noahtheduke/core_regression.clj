@@ -21,6 +21,11 @@
     :definition :mvn
     :git/url "https://github.com/clojure/algo.monads.git"
     :git/tag "algo.monads-0.1.6"}
+   {:name 'clojure/clojurescript
+    :definition :deps.edn
+    :test-cmd "-M:compiler.test:compiler.test.run"
+    :git/url "https://github.com/clojure/clojurescript.git"
+    :git/tag "r1.11.121"}
    {:name 'clojure/core.async
     :definition :mvn
     :git/url "https://github.com/clojure/core.async.git"
@@ -476,7 +481,7 @@
    {:name 'clojurewerkz/meltdown
     :definition :lein
     :setup ["sed -i -e 's/1.1.6.BUILD-SNAPSHOT/1.1.6.RELEASE/g' project.clj"
-            "sed -i -e 's/:javac-options/#_#_:javac-options/g' project.clj"
+            "sed -i -e 's/ :javac-options/#_#_:javac-options/g' project.clj"
             "sed -i -e 's/\"-XX:+UseFastAccessorMethods\"//g' project.clj"]
     :test-cmd "test"
     :git/url "https://github.com/clojurewerkz/meltdown.git"
@@ -666,7 +671,7 @@
     :git/tag "1.11.423"}
    {:name 'funcool/buddy-hashers
     :definition :deps.edn
-    :setup ["sed -i -e 's/:javac-opts/#_#_:javac-options/g' build.clj"
+    :setup ["sed -i -e 's/ :javac-opts/#_#_:javac-options/g' build.clj"
             "clojure -T:build compile"]
     :test-cmd "-X:dev:test"
     :git/url "https://github.com/funcool/buddy-hashers.git"
@@ -1121,7 +1126,7 @@
     :setup [{:definition :deps.edn
              :test-cmd "-X:deps:local prep"
              :dir "service"}
-            "sed -i -e 's/:javac-options/#_#_:javac-options/g' service/build.clj"
+            "sed -i -e 's/ :javac-options/ #_#_:javac-options/g' service/build.clj"
             {:definition :deps.edn
              :test-cmd "-T:build compile-java :aliases '[:local :servlet-api]'"
              :dir "service"}]
@@ -1545,13 +1550,13 @@
    {:name 'ztellman/clj-radix
     :definition :lein
     :test-cmd "test"
-    :setup "sed -i -e 's/:javac-options/#_#_:javac-options/g' project.clj"
+    :setup "sed -i -e 's/ :javac-options/#_#_:javac-options/g' project.clj"
     :git/url "https://github.com/ztellman/clj-radix.git"
     :git/tag "0.1.0"}
    {:name 'ztellman/clj-tuple
     :definition :lein
     :test-cmd "test"
-    :setup "sed -i -e 's/:javac-options/#_#_:javac-options/g' project.clj"
+    :setup "sed -i -e 's/ :javac-options/#_#_:javac-options/g' project.clj"
     :skip true ;; relies on collection-check, which is broken
     :git/url "https://github.com/ztellman/clj-tuple.git"
     :git/tag "0.2.2"}
@@ -1564,14 +1569,14 @@
    {:name 'ztellman/narrator
     :definition :lein
     :test-cmd "test"
-    :setup "sed -i -e 's/:javac-options/#_#_:javac-options/g' project.clj"
+    :setup "sed -i -e 's/ :javac-options/#_#_:javac-options/g' project.clj"
     :skip true ;; 1.9 spec fails (symbol instead of keyword in ns form)
     :git/url "https://github.com/ztellman/narrator.git"
     :git/tag "0.1.2"}
    {:name 'ztellman/proteus
     :definition :lein
     :test-cmd "test"
-    :setup "sed -i -e 's/:javac-options/#_#_:javac-options/g' project.clj"
+    :setup "sed -i -e 's/ :javac-options/#_#_:javac-options/g' project.clj"
     :git/url "https://github.com/ztellman/proteus.git"
     :git/tag "0.1.6"}
    {:name 'ztellman/penumbra
@@ -1583,7 +1588,7 @@
    {:name 'ztellman/riddley
     :definition :lein
     :test-cmd "test"
-    :setup "sed -i -e 's/:javac-options/#_#_:javac-options/g' project.clj"
+    :setup "sed -i -e 's/ :javac-options/#_#_:javac-options/g' project.clj"
     :git/url "https://github.com/ztellman/riddley.git"
     :git/tag "0.2.0"}
    {:name 'ztellman/sleight
@@ -1689,6 +1694,7 @@
     (gl/procure (:git/url lib)
                 (:name lib)
                 (or (:git/tag lib) (:git/sha lib)))))
+
 (defn pmap*
   "Efficient version of pmap which avoids the overhead of lazy-seq.
 
@@ -1738,6 +1744,7 @@
                        (io/file lib-dir (:dir lib))
                        lib-dir))]
       (when test-dir
+        (shell {:dir test-dir} "git reset --hard")
         (when (= :lein (:definition lib))
           (copy-profiles test-dir profile)
           (remove-pedantic test-dir))
@@ -1779,7 +1786,7 @@
                   result (if (zero? (:exit test-result))
                            :success :failure)]
               (when (:test-out options)
-                (sb-println sb (:out test-result)))
+                (sb-println sb (slurp (:out test-result))))
               (when (= result :failure)
                 (sb-println sb lib-name "tests did not pass"))
               (update-results results {:name lib-name
@@ -1810,9 +1817,10 @@
         filter-fn (make-filter-fn options)
         results (atom {})
         libs (filterv filter-fn (all-libraries))]
-    (pmap* #(test-lib options profile version results %) libs)
-    #_(doseq [lib libs]
-      (test-lib options profile version results lib))
+    (if (:parallel options)
+      (pmap* #(test-lib options profile version results %) libs)
+      (doseq [lib libs]
+        (test-lib options profile version results lib)))
     (when-let [failures (seq (filter #(= :failure (:result %)) (vals @results)))]
       (newline)
       (println "Failures:")
@@ -1825,11 +1833,13 @@
 (def cli-options
   [[nil "--[no-]build" "Recompile and install clojure snapshot jar"
     :default false]
+   [nil "--[no-]parallel" "Run the test suites in parallel"
+    :default false]
    ["-b" "--branch BRANCH" "clojure-local-dev branch to use"
     :default "master"]
    ["-l" "--library LIBRARY" "Specific library to check"
     :multi true
-    :default #{}
+    :default []
     :update-fn conj
     :parse-fn symbol]
    ["-n" "--namespace NAMESPACE" "Namespace of libraries to check"]
@@ -1877,6 +1887,7 @@
     (if exit-message
       (exit (if ok? 0 1) exit-message)
       (do (run-impl opts)
+          (shutdown-agents)
           (System/exit 0)))))
 
 ;; Full run:

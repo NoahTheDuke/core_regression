@@ -23,6 +23,15 @@ I have been unable to figure out an automatic method of determining the
 necessary setup and test commands for a given clojure repo, so until then, we'll
 have to continue to manually add libraries and specify working tags or shas.
 
+## Set-up / Requirements
+
+I developed this on two different computers: Ubuntu 23.04, and 2018 Macbook Pro.
+I've done my best to avoid or disable the clojurescript and javascript test
+suites, but some still happen.
+
+* javac version: 11.0.20.1
+* Clojure CLI version: 1.11.1.1347
+
 ## How to use
 
 Fork or clone the repo to some folder. In an adjacent folder, fork or clone

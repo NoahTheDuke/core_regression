@@ -570,11 +570,10 @@
     :git/url "https://github.com/cognitect-labs/aws-api.git"
     :git/tag "v0.8.686"}
    {:name 'cognitect-labs/fern
-    :definition :lein
-    :test-cmd "test"
-    :skip true ;; broken test: https://github.com/cognitect-labs/fern/issues/9
+    :definition :deps.edn
+    :test-cmd "-M:test"
     :git/url "https://github.com/cognitect-labs/fern.git"
-    :git/tag "0.1.6"}
+    :git/sha "703e034d73d6e45c748ac3c5587ebe4e291833b7"}
    {:name 'cognitect-labs/test-runner
     :definition :deps.edn
     :test-cmd "-M:test"
@@ -771,9 +770,8 @@
    {:name 'http-kit/http-kit
     :definition :lein
     :test-cmd "test"
-    :skip true ;; 1.9 spec fails (symbol instead of keyword in ns form)
     :git/url "https://github.com/http-kit/http-kit.git"
-    :git/tag "v2.7.0"}
+    :git/sha "4813a17a5e5757f4c0cc1d3ca4b27c95b7f5825f"}
    {:name 'ibdknox/colorize
     :definition :lein
     :test-cmd "test"
@@ -1098,9 +1096,8 @@
    {:name 'pangloss/pattern
     :definition :deps.edn
     :test-cmd "-M:test:runner"
-    :skip true ;; test runner url is incorrect: https://github.com/pangloss/pattern/issues/23
     :git/url "https://github.com/pangloss/pattern.git"
-    :git/sha "79cc57792fcb6b72d9ad9036ad29c7fca7e85ca3"}
+    :git/sha "34d69cfffd5955c0a62ff7e641163c27d7bcfb82"}
    {:name 'pangloss/pure-conditioning
     :definition :lein
     :test-cmd "test"
@@ -1234,7 +1231,7 @@
    {:name 'sattvik/leinjacker
     :definition :lein
     :test-cmd "test"
-    :skip true ;; nterop requires missing type hint
+    :skip true ;; interop requires missing type hint
     :git/url "https://github.com/sattvik/leinjacker.git"
     :git/tag "0.4.3"}
    {:name 'scgilardi/slingshot
@@ -1530,11 +1527,11 @@
     :skip true ;; requires testcontainers to be installed
     :git/url "https://github.com/yogthos/migratus.git"
     :git/sha "b61f9bcbce7acd2156a0adffbd9946f9702a4acd"}
-   ;; any later commit requires java 19+. should I disable this?
    {:name 'yogthos/selmer
     :definition :deps.edn
     :test-cmd "-X:dev:test"
     :git/url "https://github.com/yogthos/Selmer.git"
+    ;; any later commit requires java 19+. should I disable this?
     :git/sha "151b81a0c904b07444f37382132bd9e39add01f2"}
    {:name 'ztellman/automat
     :definition :lein
@@ -1727,6 +1724,10 @@
 (defn update-results [results m]
   (swap! results assoc (:name m) m))
 
+(defn- get-duration [start-time]
+  (/ (double (- (. System (nanoTime)) start-time))
+     1000000.0))
+
 (defn test-lib
   [options profile version results {lib-name :name :keys [skip] :as lib}]
   (if skip
@@ -1781,8 +1782,7 @@
           (try
             (sb-println sb "Running test command:" cmd)
             (let [test-result (shell shell-opts cmd)
-                  duration (/ (double (- (. System (nanoTime)) start-time))
-                              1000000.0)
+                  duration (get-duration start-time)
                   result (if (zero? (:exit test-result))
                            :success :failure)]
               (when (:test-out options)
@@ -1793,8 +1793,7 @@
                                        :result result
                                        :duration duration}))
             (catch Throwable e
-              (let [duration (/ (double (- (. System (nanoTime)) start-time))
-                                1000000.0)]
+              (let [duration (get-duration start-time)]
                 (sb-println sb e)
                 (update-results results {:name lib-name
                                          :result :failure

@@ -955,9 +955,8 @@
    {:name 'marick/midje
     :definition :lein
     :test-cmd "midje"
-    :skip true ;; dev set-up relies on pre-1.10 error messages
     :git/url "https://github.com/marick/Midje.git"
-    :git/sha "34819ae8d24a11b0f953d461f94e09a2638ff385"}
+    :git/sha "bee206983db22c6dc92044fd7b5b0365bbd44fc6"}
    {:name 'marick/suchwow
     :definition :lein
     :test-cmd "midje"

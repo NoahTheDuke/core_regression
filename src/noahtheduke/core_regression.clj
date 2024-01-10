@@ -1016,7 +1016,7 @@
     :test-cmd "midje"
     :skip true
     :git/url "https://github.com/metosin/ring-swagger.git"
-    :git/tag "0.26.2"}
+    :git/sha "6352e2c47bab0e8c624a8d7099ee82bf14cb08d5"}
    {:name 'metosin/schema-tools
     :definition :lein
     :test-cmd "test"
@@ -1099,10 +1099,10 @@
     :git/url "https://github.com/pangloss/pattern.git"
     :git/sha "34d69cfffd5955c0a62ff7e641163c27d7bcfb82"}
    {:name 'pangloss/pure-conditioning
-    :definition :lein
-    :test-cmd "test"
+    :definition :deps.edn
+    :test-cmd "-M:test"
     :git/url "https://github.com/pangloss/pure-conditioning.git"
-    :git/sha "61fa43215e0fce0fe83808b9e30c2bb4c170ffbd"}
+    :git/sha "2d84722845c9a3835fb50f6144049a530ac93686"}
    {:name 'pangloss/system.check
     :definition :lein
     :test-cmd "test"
@@ -1668,13 +1668,14 @@
                              'org.clojure/clojure
                              "1.11.1"))
         version (get-version-from-pom (io/file path "pom.xml"))
-        jar (format "clojure-%s.jar" version)]
+        jar (format "clojure-%s.jar" version)
+        jar-path (str (io/file path "target" jar))]
     (when (:build options)
       (shell {:dir path} "mvn" "-ntp" "-q" "-Dmaven.test.skip=true" "clean" "package")
-      (install-clojure path version jar))
+      (install-clojure jar-path version jar))
     {:version version
      :jar jar
-     :path (str path "/target/" jar)}))
+     :path jar-path}))
 
 (defn copy-profiles [dir profile]
   (spit (io/file dir "profiles.clj") profile))
@@ -1715,7 +1716,9 @@
     #(libraries (:name %))
     (if-let [chosen-ns (:namespace options)]
       #(= chosen-ns (namespace (:name %)))
-      identity)))
+      (if-let [definition (not-empty (set (:definition options)))]
+        #(contains? definition (:definition %))
+        identity))))
 
 (defn sb-println [sb & strings]
   (.append sb (str/join " " strings))
@@ -1841,6 +1844,11 @@
     :default []
     :update-fn conj
     :parse-fn symbol]
+   ["-d" "--definition DEFINITION" "Which project definition lib: mvn, lein, deps, deps.edn"
+    :multi true
+    :default []
+    :update-fn conj
+    :parse-fn #(if (#{"deps" "deps.edn"} %) :deps.edn (keyword %))]
    ["-n" "--namespace NAMESPACE" "Namespace of libraries to check"]
    [nil "--[no-]test-out" "Print test out to STOUT"
     :default false]
